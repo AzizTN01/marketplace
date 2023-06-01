@@ -6,12 +6,20 @@ import { View ,
 
 } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
+import { useBuyNow, useContract, Web3Button ,useDirectListings,useAddress} from "@thirdweb-dev/react-native";
+// import { ListingType } from "@thirdweb-dev/sdk";
+
+const Address ='0x8D3bc1C6B16c885Aa8F5241340De968F2F54A67f';
 
 
+const FeaturedNft = ({title,artist,highestBid,currency,nft,owner,stat}) => {
+    const { contract } = useContract(Address);
+    const { mutateAsync: buyNow} = useBuyNow(contract);
+   const { data:nfts } = useDirectListings(contract);
+    const currentaddress = useAddress();
 
-const FeaturedNft = ({title,artist,highestBid,timeAgo,}) => {
-
-
+   
+     
   return (
 <View style={{
     width:270,
@@ -24,12 +32,15 @@ const FeaturedNft = ({title,artist,highestBid,timeAgo,}) => {
 
 
 }}>
+    
   <Image
-         source={require('../assets/images/nftest.png')}
+         source={{uri:nft}}
          style={{
             alignSelf:'center',
             borderRadius:20,
             marginTop:10,
+            height:150,
+            width:250,
          }} 
          />
          <View style={{
@@ -80,7 +91,7 @@ const FeaturedNft = ({title,artist,highestBid,timeAgo,}) => {
                         fontSize:10,
                         fontWeight:400,
                         }} >
-                            Highest Bid
+                            Price
                         </Text>
                       
                     </View>  
@@ -111,28 +122,79 @@ const FeaturedNft = ({title,artist,highestBid,timeAgo,}) => {
                     <View style={{
                         flex:1,
                         flexDirection:'row',
-                        justifyContent:'space-around'
+                        justifyContent:'flex-start'
                     }}>
                     <Ionicons style={{
             //  marginLeft:15,
              // marginRight: 4,
              // alignSelf:'center',
-            }} name="time-outline" size={22} color={"rgba(57, 59, 62, 1)"} />
+            }} name="cash-outline" size={22} color={"rgba(57, 59, 62, 1)"} />
               <Text style={{
                         color:'#393B3E',
                         fontSize:13,
                         fontWeight:400,
+                        marginLeft: '10%',
                     }}>
                         
-                        {timeAgo}
+                        {currency}
                     </Text>
 
                     </View>
                   <View style={{
-                  
+                //  backgroundColor:'red',
                     flex:1,
                   }}>
-                    <TouchableOpacity style={{
+                    {stat !=0  &&
+                    <View style={{
+                       // backgroundColor:'red',
+                        marginLeft:'10%',
+                       // marginBottom: '40%'
+                       alignSelf:'baseline',
+                       backgroundColor:'#7f81f3'
+                    }}>
+                        
+                    
+                  </View>
+                    }{stat==0 &&
+                        <View style={{
+                            //backgroundColor:'red',
+                            alignSelf:'flex-end'
+                        }}>
+
+                    <Text style={{
+                        color:'#393B3E',
+                        fontSize:14,
+                        fontWeight:600,
+                        marginLeft: "45%",
+                    }}>
+                        Item Sold!
+                    </Text>
+
+                        </View>
+
+                    }
+                    {owner== currentaddress &&
+                       <View style={{
+                            //backgroundColor:'red',
+                            alignSelf:'flex-end'
+                        }}>
+
+                    <Text style={{
+                        color:'#393B3E',
+                        fontSize:14,
+                        fontWeight:600,
+                        marginLeft: "45%",
+                    }}>
+                       You own this nft
+                    </Text>
+
+                        </View>
+
+                    }
+               
+                    
+                  </View>
+                  {/* style={{
                     backgroundColor:'#5F61F0',
                    
                     justifyContent:'center',
@@ -142,16 +204,7 @@ const FeaturedNft = ({title,artist,highestBid,timeAgo,}) => {
                     height:'60%',
                     alignSelf:'flex-end'
 
-                  }}>
-                    <Text style={{
-                        color:'#ffffff'
-                    }}>
-                        Bid
-                    </Text>
-                    </TouchableOpacity>
-                    
-                  </View>
-
+                  }} */}
                     
 
             </View>

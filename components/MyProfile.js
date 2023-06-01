@@ -13,21 +13,49 @@ import FeaturedNft from './FeaturedNft';
 import Topseller from './Topseller';
 // import {} from "react-native-vector"
 import CheckBox from '@react-native-community/checkbox';
+import ContentLoader, { Rect, Circle, Path } from "react-content-loader/native"
 import Feather from "react-native-vector-icons/Feather"
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { ConnectWallet, useUser , useLogin} from "@thirdweb-dev/react-native";
+import { 
+    useAddress, 
+    useContract,
+    useDirectListings,
+    useContractMetadata,
+    useDirectListing,
+    useOwnedNFTs,
+    ConnectWallet
+    
+} from "@thirdweb-dev/react-native";
 
 
+const Address ='0x8D3bc1C6B16c885Aa8F5241340De968F2F54A67f';
+const collection= "0x245d1343EC0dE0dBE5730dD38D2fB6dfdecbfdaF";
 
 
 const MyProfile = ({}) => {
-
-    const { user, isLoggedIn, isLoading } = useUser();
-  
+    const connectedWallet =useAddress();
+const tokenid=0;
+    const { contract } = useContract(collection);
+    const { data:Metadata } = useContractMetadata(contract);
+  // const { data:nft, isLoading, } = useDirectListings(contract);
+    const { data:nfts,  } = useDirectListing(contract,tokenid);
+    const { data:nft } = useDirectListings(contract);
+   const image = nfts?.asset.image
+   const { data:owned, isLoading:loading, error:err } = useOwnedNFTs(contract, connectedWallet);
+ 
+   function shortenString(inputString) {
+    if (inputString.length <= 6) {
+      return inputString;
+    } else {
+      return inputString.substring(0, 3) + "..." + inputString.substring(inputString.length - 3);
+    }
+  }
   return (
 <SafeAreaView 
 style={{
 flex:1,
+marginBottom:'15%'
+
 }}>
     <LinearGradient
         colors={['#D7D3FF', 'white', 'white' ,'#D7D3FF']}
@@ -51,14 +79,14 @@ flex:1,
                  height: '8%',
                  width:'100%',
                // backgroundColor:'green',
-                marginTop:'5%',
+                marginTop:'4%',
                 //marginBottom:'5%',
                // margin:'5%',
                 flexDirection: 'row',
                 alignItems:'center',
             //    position:'absolute',
             }}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={image}>
                 <Feather style={{
              marginLeft:25,
              // marginRight: 4,
@@ -73,13 +101,18 @@ flex:1,
                     marginLeft:'5%',
 
                 }}>
-                    
-                   My Profile
+                     {/* {nft && nft.map((nft)=>{
+            return(  
+                      nft?.asset.image       )
+           }
+
+           )}   */}
+                  My Profile
 
                 </Text>
+          
                 <ConnectWallet />
-               
-                <TouchableOpacity style={{
+                {/* <TouchableOpacity style={{
                     height:50,
                     width:50,
                     borderRadius:25,
@@ -96,19 +129,17 @@ flex:1,
              // marginRight: 4,
               alignSelf:'center',
             }} name="settings" size={26} color={"rgba(57, 59, 62, 1)"} />
-                </ TouchableOpacity>
+                </ TouchableOpacity> */}
                
             </View>
             <View style={{
                 //flex:1,
-              //   backgroundColor:'blue',
+              //  backgroundColor:'blue',
                 height:'20%',
                 width:'90%',
                 marginTop:'5%',
                 marginBottom:'5%',
                 margin:'5%',
-                
-                
             }}>
                  
                 <View style={{
@@ -121,14 +152,14 @@ flex:1,
                     
                 <Image source={source=require('../assets/images/profilebackgroud.png')} 
                 style={{
-                    height:'80%',
+                    height:'85%',
                     width:'100%',
                     borderRadius:20,
                     position:'absolute'
                 }}/>
                 <View style={{
                     position:'relative',
-                    marginTop: '18%',
+                    marginTop: '16%',
                     marginLeft:'5%',
                    // backgroundColor:'red',
                    flexDirection:'row',
@@ -156,7 +187,7 @@ flex:1,
                         fontWeight:600,
                         color:'#393B3E',
                     }}>
-                       Antonio
+                     {shortenString(connectedWallet)}
                     </Text>
                     <Text style={{
                         fontSize:12,
@@ -167,7 +198,8 @@ flex:1,
                     </Text>
                    
                 </View>
-                <TouchableOpacity style={{
+              
+                {/* <TouchableOpacity style={{
                     backgroundColor:'#5F61F0',
                     justifyContent:'center',
                     alignItems:'center',
@@ -176,16 +208,12 @@ flex:1,
                     height:'30%',
                     alignSelf:'center',
                     marginTop:'10%',
-                    marginLeft:'25%'
+                    marginLeft:'20%'
 
                   }}>
-                    <Text style={{
-                        color:'#ffffff'
-                    }}>
-                        Edit Profile
-                    </Text>
                     
-                    </TouchableOpacity>
+                    
+                    </TouchableOpacity> */}
                  
                 </View>
                
@@ -194,132 +222,8 @@ flex:1,
                 
 
             </View>
-            <View style={{
-                marginTop:'2%',
-               // backgroundColor:'red',
-                height:'10%',
-                width:'90%',
-                borderRadius:15,
-                flexDirection:'row'
-
-            }} >
-                <View style={{
-                    flex:1,
-                   
-                    alignItems:'center',
-                    justifyContent:'center'
-                }}>
-                    <Text style={{
-                        fontSize:20,
-                        fontWeight:700,
-                        color:'#393B3E'
-                    }}>
-                        145
-                    </Text>
-                    <Text style={{
-                        fontSize:12,
-                        fontWeight:600,
-                        color:'rgba(57, 59, 62, 0.5)'
-                    }}>
-                        Following
-                    </Text>
-
-                </View>
-                <View style={{
-                    flex:1,
-                   
-                    alignItems:'center',
-                    justifyContent:'center'
-                }}>
-                    <Text style={{
-                        fontSize:20,
-                        fontWeight:700,
-                        color:'#393B3E'
-                    }}>
-                        25,6K
-                    </Text>
-                    <Text style={{
-                        fontSize:12,
-                        fontWeight:600,
-                        color:'rgba(57, 59, 62, 0.5)'
-                    }}>
-                        Followers
-                    </Text>
-
-                </View>
-                
-                <View style={{
-                    flex:1,
-                    
-                    alignItems:'center',
-                    justifyContent:'center'
-                }}>
-                    <Text style={{
-                        fontSize:20,
-                        fontWeight:700,
-                        color:'#393B3E'
-                    }}>
-                        7.8K 
-                    </Text>
-                    <Text style={{
-                        fontSize:12,
-                        fontWeight:600,
-                        color:'rgba(57, 59, 62, 0.5)'
-                    }}>
-                        Likes
-                    </Text>
-
-                </View>
-                
-
-
-            </View>
-           <View style={{ 
-            marginTop:'5%',
-               // backgroundColor:'red',
-                height:'6%',
-                width:'90%',
-                borderRadius:15,
-                flexDirection:'row'
-                }}>
-                     <LinearGradient
-                     colors={['#4C4EC0','#9fa0f6']} 
-                     start={{x: 1.0, y: 1.0}} end={{x: 0.0, y: 0.0}}
-                    style={{
-                        flex:1,
-                        alignItems:'center',
-                        justifyContent:'center',
-                        backgroundColor:'#4C4EC0',
-                        borderRadius:12
-                    }}>
-                        <TouchableOpacity>
-                        <Text style={{
-                            color:'#fff',
-                            fontSize:16,
-                            fontWeight:600,
-                        }}>
-                           Artworks (50)
-                        </Text>
-                        </TouchableOpacity>
-                        
-                    </LinearGradient>
-                    <TouchableOpacity style={{
-                        flex:1,
-                        alignItems:'center',
-                        justifyContent:'center',
-                    }}>
-                        
-                        <Text style={{
-                             color:'rgba(57, 59, 62, 0.5)',
-                             fontSize:16,
-                             fontWeight:600,
-                        }}>
-                        Liked
-                        </Text>
-                     
-                    </ TouchableOpacity>
-
-           </View>
+            
+          
            <View style={{
             flex:1,
            // backgroundColor:'red',
@@ -337,70 +241,83 @@ flex:1,
                         style={{
                             flex:1,
                             height:'100%',
-                            marginTop:'5%'
+                            marginTop:'5%',
+                          //  backgroundColor:'yellow',
+                            flexDirection:'column',
+                            alignContent:'flex-start',
                         }}
                         >
-          
-           <View style={{
-            width:'100%',
-            flexDirection:'row',
-            //backgroundColor:'red',
-            justifyContent:'space-evenly',
-               alignItems:'center'
-           }}>
-           <Image source={source=require('../assets/ProfileImages/image1.png')} 
-                style={{   
-                    borderRadius:15,
-                   marginTop:'5%',
-                }}/>
+
+<View  style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                   //   backgroundColor:'red',
+                       //justifyContent:'space-evenly',
+                      // alignItems:'center'
+                   }}>
+                    {loading &&
+                    < >
+                    <View style={{
+                        marginLeft:20,
+                        marginRight:20,
+                    }}>
+                     <ContentLoader 
+                   speed={2}
+                   width={160}
+                   height={160}
+                   viewBox="0 0 160 160"
+                   backgroundColor="#f3f3f3"
+                   foregroundColor="#d6d6d6"
+                 
+                 >
+                   <Rect x="0" y="60" rx="2" ry="2" width="400" height="400" />
+                 </ContentLoader>
+                 </View>
+                 <View>
+                     <ContentLoader 
+                   speed={2}
+                   width={160}
+                   height={160}
+                   viewBox="0 0 160 160"
+                   backgroundColor="#f3f3f3"
+                   foregroundColor="#d6d6d6"
+                 
+                 >
+                   <Rect x="0" y="60" rx="2" ry="2" width="400" height="400" />
+                 </ContentLoader>
+                 </View>
+                    </>
+                    }
+             {owned && owned.map((nft)=>{
+            return(
                
-                 <Image source={source=require('../assets/ProfileImages/image2.png')} 
-                style={{   
+                    <Image
+                    source={{uri: nft?.metadata.image}}
+                     style={{   
                     borderRadius:15,
-                    marginTop:'5%',
-                }}/>
-                
-           </View>
-           <View style={{
-            width:'100%',
-            flexDirection:'row',
-            //backgroundColor:'red',
-            justifyContent:'space-evenly',
-               alignItems:'center'
-           }}>
-           <Image source={source=require('../assets/ProfileImages/image3.png')} 
-                style={{   
-                    borderRadius:15,
-                   marginTop:'5%',
-                }}/>
+                    marginLeft:'5%',
+                    marginBottom:'5%',
+                    height:160,
+                    width:160,
+                 }} />
                
-                 <Image source={source=require('../assets/ProfileImages/image4.png')} 
-                style={{   
-                    borderRadius:15,
-                    marginTop:'5%',
-                }}/>
                 
+            )
+           }
+           )}
            </View>
+           {/* {!owned &&
             <View style={{
-            width:'100%',
-            flexDirection:'row',
-            //backgroundColor:'red',
-            justifyContent:'space-evenly',
-               alignItems:'center'
-           }}>
-           <Image source={source=require('../assets/ProfileImages/image5.png')} 
-                style={{   
-                    borderRadius:15,
-                   marginTop:'5%',
-                }}/>
-               
-                 <Image source={source=require('../assets/ProfileImages/image6.png')} 
-                style={{   
-                    borderRadius:15,
-                    marginTop:'5%',
-                }}/>
-                
-           </View>
+                backgroundColor:'black'
+            }}> 
+                <Text>no nft </Text>
+                </View>
+
+           } */}
+          
             </ScrollView>
           
            

@@ -8,15 +8,17 @@ import Navigator from './Navigator';
 
 
 
+
 const Navigation = ({}) => {
 
 
   return (
 
-    <NavigationContainer> 
+<NavigationContainer> 
     <Navigator/>
    </NavigationContainer>
 
+ 
 );
 }
 

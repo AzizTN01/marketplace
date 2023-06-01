@@ -3,22 +3,26 @@ import { View ,
     SafeAreaView,
     Image,
     Text,
-    TextInput,
-    KeyboardAvoidingView,
-    TouchableOpacity,
-    Button
-    
+
 
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient';
 // import {} from "react-native-vector"
-import CheckBox from '@react-native-community/checkbox';
-import Feather from "react-native-vector-icons/Feather"
-import { useContract ,useLogin,Web3Button} from "@thirdweb-dev/react-native";
+
+import { 
+   ConnectWallet,
+  metamaskWallet,
+  useContract,
+  useAddress,
+  useContractMetadata,
+  useDirectListings,
+  useUser
+
+} from "@thirdweb-dev/react-native";
 
 import Navigation from './Navigation';
 
-
+const Address ='0x8D3bc1C6B16c885Aa8F5241340De968F2F54A67f';
 
 const SingIn = ({}) => {
   const [checkboxval, setcheckboxval] = useState(false);
@@ -26,10 +30,12 @@ const SingIn = ({}) => {
     setcheckboxval(!checkboxval)
     
   }
-  const { isLoading, login } = useLogin();
-  const adress = console.log(useLogin)
-  const { contract } = useContract("0x44670A993D3d2D4cA58cb37D8C645992a067679A", "marketplace")
+  const { user  , isLoggedIn  } = useUser();
 
+  const { contract } = useContract(Address);
+  const { data:Metadata } = useContractMetadata(contract);
+  const adress =useAddress();
+  const { data:nft, isLoading, } = useDirectListings(contract);
   return (
 <SafeAreaView 
    style={{ flex:1 }}>
@@ -82,9 +88,9 @@ const SingIn = ({}) => {
           //  padding:10,
            fontSize:18
          }}>
-            Sign In to continue 
+           ConnectWallet to continue 
          </Text>
-         <KeyboardAvoidingView>
+       
          {/* <Web3Button
       contractAddress="0x44670A993D3d2D4cA58cb37D8C645992a067679A" // Your smart contract address
       action={(contract) => contract.ContractURI()}// Logic to execute when clicked
@@ -92,7 +98,7 @@ const SingIn = ({}) => {
       Execute Action
     </Web3Button> */}
          
-         <LinearGradient 
+         {/* <LinearGradient 
          colors={[
           "#A49BFE80",
           "#5F61F080"
@@ -139,12 +145,12 @@ const SingIn = ({}) => {
             </View>
                 
                 </View>
-                </LinearGradient>
-                </KeyboardAvoidingView>
-                <KeyboardAvoidingView>
+                </LinearGradient> */}
+           
+               
 
                 
-                <LinearGradient 
+                {/* <LinearGradient 
          colors={[
           "#A49BFE80",
           "#5F61F080"
@@ -191,9 +197,9 @@ const SingIn = ({}) => {
             </View>
                 
                 </View>
-                </LinearGradient>
-                </KeyboardAvoidingView>
-                <View style={{
+                </LinearGradient> */}
+            
+                {/* <View style={{
                     borderColor:'#9999A7',
                    flexDirection:'row',
                    justifyContent:'space-around',
@@ -218,55 +224,44 @@ const SingIn = ({}) => {
                 }} >
                 Remember Password
                </Text>
-                </View>
+                </View> */}
 <View style={{ alignSelf:'center' }}>
                
+             
+             <View style={{margin:'10%'}}>
               
-              <TouchableOpacity  
-              onPress={() => {
-                 const token = login();
-                 }} >
-              {/* <ConnectWallet /> */}
-              <LinearGradient 
-              colors={['#4C4EC0','#9fa0f6']} 
-              start={{x: 1.0, y: 1.0}} end={{x: 0.0, y: 0.0}}
-              style={{ 
-                backgroundColor:'#7f81f3',
-                width:285,
-                height:55,
-                alignItems:'center',
-                justifyContent:'center',
-                borderRadius:10,
-                marginTop:5,
-                marginBottom:10,
-              }}>
-              {/* <Text style={{
-                color:'#ffffff',
-                fontSize:18,
-                }}>
-                Sign In
-              </Text > */}
-              <Button      
-              title={isLoading ? "Loading..." : "Sign "} 
-              onPress={() => {   
-                 const token = login();
-      }}
-      style={{
-        backgroundColor:'transparent'
-        }} />
-              </LinearGradient>
-              </TouchableOpacity>
-              
+             { contract &&(
+          // <View style={{backgroundColor:'#fff'}}> </View>
+          <View>      
+           <Text style={{
+            fontSize:20,
+            color:'black'
+            }} >
+            connected 
+          </Text>
+          
+          <ConnectWallet  />
+          
+          </View>
+
+        )
+        }
+        { !contract &&(
+         <ConnectWallet />
+        )
+        }
+             </View>
+           
               </View>
-              <Text  style={{
+              {/* <Text  style={{
                 color:'#A49BFE',
                 fontSize:14,
                 marginTop:15,
                 textAlign:'center'
                 }}>
                 Forgot Password?
-              </Text>
-              <View style={{
+              </Text> */}
+              {/* <View style={{
                 // backgroundColor:'red',
                 // flex:1,
                 // marginTop:'30px',
@@ -296,7 +291,7 @@ const SingIn = ({}) => {
                 }}>
                      Register now
                 </Text>
-              </View>
+              </View> */}
 
              
                 

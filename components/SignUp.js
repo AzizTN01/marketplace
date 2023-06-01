@@ -12,13 +12,31 @@ import LinearGradient from 'react-native-linear-gradient';
 // import {} from "react-native-vector"
 import CheckBox from '@react-native-community/checkbox';
 import Feather from "react-native-vector-icons/Feather"
+import { 
+  ConnectWallet, 
+  useContract,
+  useDirectListings,
+  useContractMetadata,
+  MediaRenderer,
+  useDirectListing,
+  ThirdwebNftMedia
+} from "@thirdweb-dev/react-native";
 
+const Address ='0x8D3bc1C6B16c885Aa8F5241340De968F2F54A67f';
+const tokenid=0;
 
 const SignUp = ({}) => {
   const [checkboxval, setcheckboxval] = useState(false);
   const toggleCheckbox = () => {
     setcheckboxval(!checkboxval)
   }
+  const { contract } = useContract(Address);
+  const { data:Metadata } = useContractMetadata(contract);
+ const { data:nft, isLoading, } = useDirectListings(contract);
+  const { data:nfts,  } = useDirectListing(contract,tokenid);
+  const image = nfts?.asset.image
+  
+
 
   return (
 <SafeAreaView 
@@ -73,7 +91,7 @@ const SignUp = ({}) => {
           //  padding:10,
            fontSize:18
          }}>
-            Sign Up to continue
+            Sign Up to continue 
          </Text>
          <Text style={{
            color:'#454459',
@@ -125,8 +143,10 @@ const SignUp = ({}) => {
                 style={{
                   width:'100%',
                   paddingVertical: 8,
+                  color:'black',
                   }}
                 >
+                  {image}
                 </TextInput>
             </View>
                 
@@ -173,6 +193,7 @@ const SignUp = ({}) => {
                 style={{
                   width:'100%',
                   paddingVertical: 8,
+                  color:'black',
                   }}
                 >
                 </TextInput>
@@ -217,12 +238,14 @@ const SignUp = ({}) => {
             }} name="lock" size={20} color={"rgba(153, 153, 167, 0.5)"} />
             <TextInput 
                 placeholder="Your Password"
-                placeholderTextColor={"rgba(153, 153, 167, 0.5)"}
+                placeholderTextColor={"black)"}
                 style={{
                   width:'100%',
                   paddingVertical: 8,
+                  color:'black'
                   }}
                 >
+               
                 </TextInput>
             </View>
                 
@@ -269,6 +292,7 @@ const SignUp = ({}) => {
                 style={{
                   width:'100%',
                   paddingVertical: 8,
+                  color:'black',
                   }}
                 >
                 </TextInput>

@@ -1,16 +1,24 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import Home from './Home';
 import Search from './Search';
-import SignUp from './SignUp';
+import Mintnft from './MintNft';
+import SingIn from './SingIn';
 import MyProfile from './MyProfile';
-import SuccessPage from './SuccessPage';
+import Buynft from './BuyNft';
+import BuynftEnglish from './BuyNftEnglish';
+import NftCheckOut from './NftCheckOut';
+import CheckOut from './CheckOut';
+import CheckOutEnglish from './CheckOutEnglish';
 import { View ,
     Image,
     Text,
     TouchableOpacity,
 } from 'react-native'
-import Feather from "react-native-vector-icons/Feather"
 
+
+import Feather from "react-native-vector-icons/Feather"
+const Stack = createStackNavigator();
 const Tab =  createBottomTabNavigator();
 
 const CreateNft =({onPress,children})=>{
@@ -32,6 +40,24 @@ const CreateNft =({onPress,children})=>{
     </TouchableOpacity>
 }
 
+
+const Homestack = ({}) => {
+
+
+    return (
+  
+  <Stack.Navigator screenOptions={{headerShown:false}} >
+    <Stack.Screen   name="Home" component={Home} />
+    <Stack.Screen headerShown={false} name="Buynft" component={Buynft} />
+    <Stack.Screen headerShown={false} name="SingIn" component={SingIn} />
+    <Stack.Screen headerShown={false} name="Buynftenglish" component={BuynftEnglish} />
+    <Stack.Screen headerShown={false} name="CheckOut" component={CheckOut} />
+    <Stack.Screen headerShown={false} name="NftCheckOut" component={NftCheckOut} />
+    <Stack.Screen headerShown={false} name="CheckOutEnglish" component={CheckOutEnglish} />
+  </Stack.Navigator>
+  );
+  }
+
 const Navigator=()=>{
     return(
         <Tab.Navigator
@@ -51,7 +77,7 @@ const Navigator=()=>{
             
             <Tab.Screen
              name="home" 
-             component={Home}
+             component={Homestack}
             options={{
                 tabBarIcon:({focused})=> (
                     <View style={{
@@ -158,7 +184,7 @@ const Navigator=()=>{
              /> */}
             <Tab.Screen
              name="SignUp"
-              component={SignUp}
+              component={Mintnft}
               options={{
                 tabBarIcon:({focused})=> (
                     <View style={{
@@ -169,7 +195,7 @@ const Navigator=()=>{
             //  marginLeft:15,
              // marginRight: 4,
              // alignSelf:'center',
-            }} name="grid" size={22} 
+            }} name="plus-circle" size={22} 
             color={focused? "#7f81f3": "#151B22"} />
 
              <Text style={{
@@ -177,7 +203,7 @@ const Navigator=()=>{
                 fontWeight:400,
                 color: focused ? "#7f81f3": "#151B22",
             }}>
-                Explore
+                Mint 
             </Text>
                     </View>
                 ),
@@ -205,7 +231,7 @@ const Navigator=()=>{
                 fontWeight:400,
                 color: focused ? "#7f81f3": "#151B22",
             }}>
-                Profile
+                My collection
             </Text>
                     </View>
                 ),
