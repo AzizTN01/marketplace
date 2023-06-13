@@ -14,6 +14,7 @@ import { useBuyNow, useContract,useUser, Web3Button ,lightTheme,useEnglishAuctio
 import { ScrollView } from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
 // import { ListingType } from "@thirdweb-dev/sdk";
+import ContentLoader, { Rect, Circle, Path } from "react-content-loader/native"
 
 const Address ='0x8D3bc1C6B16c885Aa8F5241340De968F2F54A67f';
 
@@ -30,7 +31,7 @@ const BuynftEnglish = ({ route}) => {
     const { contract } = useContract(Address);
     const { mutateAsync: buyNow} = useBuyNow(contract);
     const currentaddress = useAddress();
-    const { data:nfts } = useEnglishAuction(contract,id);
+    const { data:nfts ,isLoading:loading } = useEnglishAuction(contract,id);
 
     
 
@@ -116,7 +117,27 @@ const BuynftEnglish = ({ route}) => {
                         marginLeft: '10%',
                       //  backgroundColor:'red'
                     }}>
-                        
+                       {loading &&
+                          <ContentLoader 
+                          speed={2}
+                          width={100}
+                          height={20}
+                          viewBox="0 0 100 20"
+                          backgroundColor="#f3f3f3"
+                          foregroundColor="#d6d6d6"
+                         
+                        >
+                          <Rect x="0" y="0" rx="3" ry="3" width="67" height="11" /> 
+                          <Rect x="76" y="0" rx="3" ry="3" width="140" height="11" /> 
+                          <Rect x="127" y="48" rx="3" ry="3" width="53" height="11" /> 
+                          <Rect x="187" y="48" rx="3" ry="3" width="72" height="11" /> 
+                          <Rect x="18" y="48" rx="3" ry="3" width="100" height="11" /> 
+                          <Rect x="0" y="71" rx="3" ry="3" width="37" height="11" /> 
+                          <Rect x="18" y="23" rx="3" ry="3" width="140" height="11" /> 
+                          <Rect x="166" y="23" rx="3" ry="3" width="173" height="11" />
+                        </ContentLoader>
+                      
+                      }
                        {price}
                     </Text>
 
@@ -146,6 +167,27 @@ const BuynftEnglish = ({ route}) => {
                     fontWeight:600,
                     color:'#393A90'
                 }}>
+                    {loading &&
+                    <ContentLoader 
+                    speed={2}
+                    width={100}
+                    height={20}
+                    viewBox="0 0 100 20"
+                    backgroundColor="#f3f3f3"
+                    foregroundColor="#d6d6d6"
+                   
+                  >
+                    <Rect x="0" y="0" rx="3" ry="3" width="67" height="11" /> 
+                    <Rect x="76" y="0" rx="3" ry="3" width="140" height="11" /> 
+                    <Rect x="127" y="48" rx="3" ry="3" width="53" height="11" /> 
+                    <Rect x="187" y="48" rx="3" ry="3" width="72" height="11" /> 
+                    <Rect x="18" y="48" rx="3" ry="3" width="100" height="11" /> 
+                    <Rect x="0" y="71" rx="3" ry="3" width="37" height="11" /> 
+                    <Rect x="18" y="23" rx="3" ry="3" width="140" height="11" /> 
+                    <Rect x="166" y="23" rx="3" ry="3" width="173" height="11" />
+                  </ContentLoader>
+                
+                }
                     {name}
                 </Text>
                 <Text style={{
@@ -153,7 +195,29 @@ const BuynftEnglish = ({ route}) => {
                     fontWeight:400,
                     color:'#A1A4B3'
                 }}>
-                    by {user}
+                     {loading &&
+                    <ContentLoader 
+                    speed={2}
+                    width={100}
+                    height={20}
+                    viewBox="0 0 100 20"
+                    backgroundColor="#f3f3f3"
+                    foregroundColor="#d6d6d6"
+                   
+                  >
+                    <Rect x="0" y="0" rx="3" ry="3" width="67" height="11" /> 
+                    <Rect x="76" y="0" rx="3" ry="3" width="140" height="11" /> 
+                    <Rect x="127" y="48" rx="3" ry="3" width="53" height="11" /> 
+                    <Rect x="187" y="48" rx="3" ry="3" width="72" height="11" /> 
+                    <Rect x="18" y="48" rx="3" ry="3" width="100" height="11" /> 
+                    <Rect x="0" y="71" rx="3" ry="3" width="37" height="11" /> 
+                    <Rect x="18" y="23" rx="3" ry="3" width="140" height="11" /> 
+                    <Rect x="166" y="23" rx="3" ry="3" width="173" height="11" />
+                  </ContentLoader>
+                
+                }
+                   
+                    {!loading && 'by '+ user}
                 </Text>
                 </View>
                 <View>
@@ -166,7 +230,28 @@ const BuynftEnglish = ({ route}) => {
                 }}>
                     Description
                 </Text>
-               {description && 
+                {loading &&
+                    <ContentLoader 
+                    speed={2}
+                    width={100}
+                    height={20}
+                    viewBox="0 0 100 20"
+                    backgroundColor="#f3f3f3"
+                    foregroundColor="#d6d6d6"
+                   
+                  >
+                    <Rect x="0" y="0" rx="3" ry="3" width="67" height="11" /> 
+                    <Rect x="76" y="0" rx="3" ry="3" width="140" height="11" /> 
+                    <Rect x="127" y="48" rx="3" ry="3" width="53" height="11" /> 
+                    <Rect x="187" y="48" rx="3" ry="3" width="72" height="11" /> 
+                    <Rect x="18" y="48" rx="3" ry="3" width="100" height="11" /> 
+                    <Rect x="0" y="71" rx="3" ry="3" width="37" height="11" /> 
+                    <Rect x="18" y="23" rx="3" ry="3" width="140" height="11" /> 
+                    <Rect x="166" y="23" rx="3" ry="3" width="173" height="11" />
+                  </ContentLoader>
+                
+                }
+               {!loading  && 
                 <Text style={{
                     fontSize:14,
                     fontWeight:400,
@@ -176,16 +261,6 @@ const BuynftEnglish = ({ route}) => {
                     description
                     }
                 </Text>
-                }
-                {!description &&
-                 <Text style={{
-                    fontSize:14,
-                    fontWeight:400,
-                    color:'#A1A4B3'
-                }}>
-                   No description availble
-                </Text>
-
                 }
                  </View>
             
@@ -214,6 +289,7 @@ const BuynftEnglish = ({ route}) => {
                 title='Chech Out' 
                  onPress={() =>
                     navigation.navigate('CheckOut',{id:listingId})
+                  // navigation.navigate('CheckOut',{id:listingId})
                 
                 }
                 color={'#7f81f3'}

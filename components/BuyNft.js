@@ -14,7 +14,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
 // import { ListingType } from "@thirdweb-dev/sdk";
 import { useNavigation } from '@react-navigation/native';
-
 import ContentLoader, { Rect, Circle, Path } from "react-content-loader/native"
 
 const Address ='0x8D3bc1C6B16c885Aa8F5241340De968F2F54A67f';

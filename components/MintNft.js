@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import { View ,
     Image,
     Text,
@@ -15,7 +15,7 @@ import LinearGradient from 'react-native-linear-gradient';
 // import { ListingType } from "@thirdweb-dev/sdk";
 import { useNavigation } from '@react-navigation/native';
 import Feather from "react-native-vector-icons/Feather"
-
+import axios from 'axios';
 
 
 const Address ='0x245d1343EC0dE0dBE5730dD38D2fB6dfdecbfdaF';
@@ -31,7 +31,31 @@ const Mintnft = ({ route}) => {
         
       };
    
-     
+      const [nftData, setNFTData] = useState([]);
+
+      useEffect(() => {
+        const fetchData = async () => {
+          const options = {
+            method: 'GET',
+            url: 'https://top-nft-sales.p.rapidapi.com/sales/30d',
+            headers: {
+              'X-RapidAPI-Key': 'c6c4deb503msh7e8b65d5e7e4dffp12e772jsn923331934efc',
+              'X-RapidAPI-Host': 'top-nft-sales.p.rapidapi.com',
+            },
+          };
+    
+          try {
+            const response = await axios.request(options);
+            setNFTData(response.data);
+           
+          } catch (error) {
+            console.error(error);
+          }
+        };
+    
+        fetchData();
+      }, []);
+    
   return (
     
 <SafeAreaView style={{
@@ -179,7 +203,7 @@ const Mintnft = ({ route}) => {
                 
                 </View>
                 </LinearGradient>
-
+                
             </View>
            
            

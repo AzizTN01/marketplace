@@ -20,9 +20,10 @@ import {
   useActiveListings,
 } from '@thirdweb-dev/react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import SingIn from "./components/SingIn";
+import Splash from "./components/Splash";
 import Navigation from './components/Navigation';
-//import MyProfile from './components/MyProfile';
+import SingIn from './components/SingIn';
+import Error from './components/error';
 import{NavigationContainer} from '@react-navigation/native';
 
 //import Navigator from './components/Navigator';
@@ -65,7 +66,7 @@ const App = () => {
 
   >   
   
-<Navigation />
+<Navigation/>
 
      {/* <NavigationContainer> 
     <Navigator/>

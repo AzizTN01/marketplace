@@ -10,6 +10,7 @@ import BuynftEnglish from './BuyNftEnglish';
 import NftCheckOut from './NftCheckOut';
 import CheckOut from './CheckOut';
 import CheckOutEnglish from './CheckOutEnglish';
+import Error from './error';
 import { View ,
     Image,
     Text,
@@ -54,6 +55,7 @@ const Homestack = ({}) => {
     <Stack.Screen headerShown={false} name="CheckOut" component={CheckOut} />
     <Stack.Screen headerShown={false} name="NftCheckOut" component={NftCheckOut} />
     <Stack.Screen headerShown={false} name="CheckOutEnglish" component={CheckOutEnglish} />
+    <Stack.Screen headerShown={false} name="Error" component={Error} />
   </Stack.Navigator>
   );
   }

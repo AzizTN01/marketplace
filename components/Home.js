@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 
 import { View ,
     SafeAreaView,
@@ -7,10 +7,11 @@ import { View ,
     FlatList,
     ScrollView,
     TouchableOpacity,
+    Alert,
    
 } from 'react-native'
 import ContentLoader, { Rect, Circle, Path } from "react-content-loader/native"
-
+import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 
 
@@ -36,7 +37,14 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const Address ='0x8D3bc1C6B16c885Aa8F5241340De968F2F54A67f';
 
-
+const options = {
+  method: 'GET',
+  url: 'https://top-nft-sales.p.rapidapi.com/sales/30d',
+  headers: {
+    'X-RapidAPI-Key': 'c6c4deb503msh7e8b65d5e7e4dffp12e772jsn923331934efc',
+    'X-RapidAPI-Host': 'top-nft-sales.p.rapidapi.com'
+  }
+};
 
 const Home = ({}) => {
     const tokenid=0;
@@ -73,6 +81,31 @@ const Home = ({}) => {
       const goToOtherScreen = () => {
         navigation.navigate('Buynft');
       };
+      const [nftData, setNFTData] = useState([]);
+
+      // useEffect(() => {
+      //   const fetchData = async () => {
+      //     const options = {
+      //       method: 'GET',
+      //       url: 'https://top-nft-sales.p.rapidapi.com/sales/30d',
+      //       headers: {
+      //         'X-RapidAPI-Key': 'c6c4deb503msh7e8b65d5e7e4dffp12e772jsn923331934efc',
+      //         'X-RapidAPI-Host': 'top-nft-sales.p.rapidapi.com',
+      //       },
+      //     };
+    
+      //     try {
+      //       const response = await axios.request(options);
+      //       setNFTData(response.data);
+           
+      //     } catch (error) {
+      //       console.error(error);
+      //     }
+      //   };
+    
+      //   fetchData();
+      // }, []);
+    
 
 
 
@@ -137,6 +170,14 @@ const Home = ({}) => {
             {/* this part is for featured NFT's */}
 <ScrollView>
 
+{/* {nftData.map((nft, index) => (
+        <View style={{
+          flex:1,
+          backgroundColor:'red',
+        }} key={index}>
+          <Text >{nft.nft_name}</Text>
+        </View>
+      ))} */}
 
             <View style={{
                 width:'100%',
@@ -277,7 +318,7 @@ foregroundColor="#d6d6d6"
                 height:'50%',
                 //marginTop:'5%',
                
-              // backgroundColor:'red',
+              //backgroundColor:'red',
                 }}>
 
                     <View style={{
@@ -360,31 +401,11 @@ foregroundColor="#d6d6d6"
                         }
                      
                         
-                         {/* <View style={{flexDirection:'row'}}>
-
-                      
-                           {nft && nft.map((nft)=>{
-                            return(
-                                 <View>
-                                  <TouchableOpacity onPress={() =>
-                                     navigation.navigate('Buynft',{id:nft?.id})
-                                     }>
-                                    <FeaturedNft
-                                    title={nft?.asset.name} 
-                                    artist={nft?.asset.name} 
-                                    highestBid={nft?.currencyValuePerToken.displayValue} 
-                                    currency={nft?.currencyValuePerToken.name}
-                                    nft={nft?.asset.image}
-                                    listingId={nft?.id}
-                                    stat={nft?.quantity} />
-                                    </TouchableOpacity>
-                                </View> )})}
-
-                               </View > */}
-                        {/* </ScrollView> */}
+                  
                         </View>
                     </View>
             </View>
+           
             {/* <View style={{
              // backgroundColor:'red',
               flex:1,
@@ -443,7 +464,7 @@ foregroundColor="#d6d6d6"
              </View>
 
             </View> */}
-            
+     
             </ScrollView>
         </View>
        

@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import { View ,
     SafeAreaView,
     Image,
@@ -14,11 +14,37 @@ import Topseller from './Topseller';
 import CheckBox from '@react-native-community/checkbox';
 import Feather from "react-native-vector-icons/Feather"
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import axios from 'axios';
 
 
 const Search = ({}) => {
 
  
+    const [nftData, setNFTData] = useState([]);
+
+    // useEffect(() => {
+    //   const fetchData = async () => {
+    //     const options = {
+    //       method: 'GET',
+    //       url: 'https://top-nft-sales.p.rapidapi.com/sales/30d',
+    //       headers: {
+    //         'X-RapidAPI-Key': 'c6c4deb503msh7e8b65d5e7e4dffp12e772jsn923331934efc',
+    //         'X-RapidAPI-Host': 'top-nft-sales.p.rapidapi.com',
+    //       },
+    //     };
+  
+    //     try {
+    //       const response = await axios.request(options);
+    //       setNFTData(response.data);
+         
+    //     } catch (error) {
+    //       console.error(error);
+    //     }
+    //   };
+  
+    //   fetchData();
+    // }, []);
+  
 
   return (
 <SafeAreaView 
@@ -57,143 +83,23 @@ const Search = ({}) => {
                       marginRight: '2%',
                 }}>
                       {/*search bar*/}
-                    <View style={{
-                        flex:1,
-                       // backgroundColor:'red',
-                        borderRadius:12,
-                        borderColor:'#9E9E9E',
-                        borderWidth:1,
-                        flexDirection:'row',
-                        alignItems:'center',
-                        justifyContent:'space-between',
-                        paddingLeft:20,
-                        paddingRight: 20,
-                        
-                    }}>
-                        <Text style={{
-                            fontSize:18,
-                            fontWeight:400,
-                            color:'#9E9E9E'
-                           // margin:'5%'
-                        }}>
-                            search here
-                        </Text>
-                        <Feather style={{
-            //  marginLeft:15,
-             // marginRight: 4,
-              alignSelf:'center',
-            }} name="search" size={23} color={"rgba(158, 158, 158, 1)"} />
-                    </View>
+                   <Text style={{
+                    color:'black',
+                    fontSize: 28,
+                    fontWeight:600
+
+                   }} >
+                    Top NFT's
+                   </Text>
                 </View>
                 {/* filter */}
-                <View style={{
-                 // backgroundColor:'green',
-                  height:'100%',
-                  width:'20%',
-                  //borderRadius:12,
-                  marginLeft:20,
-                }}>
-                    <View style={{
-                        width:'65%',
-                        height:'100%',
-                        backgroundColor:'white',
-                        borderRadius:12,
-                        alignItems:'center',
-                        justifyContent:'center'
-                        
-                    }}>
-                         <Feather style={{
-            //  marginLeft:15,
-             // marginRight: 4,
-              alignSelf:'center',
-            }} name="sliders" size={28} color={"rgba(158, 158, 158, 1)"} />
-
-                    </View>
-                </View>
+               
 
             </View>
 
              {/*SEARCH RESULT AND THE REST OF THE PAGE*/}
 
-             <View style={{
-                flex:1,
-                marginTop:'10%'
-               // backgroundColor:'red',
-
-             }}>
-                <Text style={{
-                    fontSize:18,
-                    color:'#131330',
-                    fontWeight:700,
-
-                }}>
-                    search Result
-                </Text>
-                 {/*type of resulte*/}
-                <View style={{
-                    width:'100%',
-                    height:'8%',
-                    marginTop:'10%',
-                    flexDirection:'row',
-                    borderRadius:12,
-                    backgroundColor:'#E0E0E0'
-
-
-                }}>
-                    <View style={{
-                        flex:1,
-                        alignItems:'center',
-                        justifyContent:'center',
-                        
-                        
-                        
-                    }}>
-                        <Text style={{
-                             fontSize:14,
-                             fontWeight:700,
-                        }}>
-                            Items
-                        </Text>
-                    </View>
-                    <LinearGradient
-                     colors={['#4C4EC0','#9fa0f6']} 
-                     start={{x: 1.0, y: 1.0}} end={{x: 0.0, y: 0.0}}
-                    style={{
-                        flex:1,
-                        alignItems:'center',
-                        justifyContent:'center',
-                        backgroundColor:'#4C4EC0',
-                        borderRadius:12
-                    }}>
-                        <Text style={{
-                            color:'#fff',
-                            fontSize:14,
-                            fontWeight:700,
-                        }}>
-                            Users
-                        </Text>
-                    </LinearGradient>
-                   
-                    <View  style={{
-                        flex:1,
-                        alignItems:'center',
-                        justifyContent:'center',
-                       
-                    }}>
-                        <Text style={{
-                             fontSize:14,
-                             fontWeight:700,
-                        }}>
-                            Collections
-                        </Text>
-                    </View>
-                   
-                </View>
-                <User/>
-                <User/>
-                <User/>
-                <User/>
-             </View>
+           
              
         </View>
      </LinearGradient>

@@ -3,20 +3,21 @@ import { View ,
     SafeAreaView,
     Image,
     Text,
+    TouchableOpacity,
    
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient';
 // import {} from "react-native-vector"
 import CheckBox from '@react-native-community/checkbox';
 import Feather from "react-native-vector-icons/Feather"
+import { useNavigation } from '@react-navigation/native';
 
-
-const SuccessPage = ({}) => {
+const Error = ({}) => {
   const [checkboxval, setcheckboxval] = useState(false);
   const toggleCheckbox = () => {
     setcheckboxval(!checkboxval)
   }
-
+  const navigation = useNavigation();
   return (
 <SafeAreaView 
    style={{ flex:1 }}>
@@ -95,7 +96,10 @@ const SuccessPage = ({}) => {
                 <View style={{
                     marginTop:'20%'
                 }}>
-                <LinearGradient 
+                    <TouchableOpacity
+                 //  onPress={ navigation.navigate('Home')}
+                     >
+                    <LinearGradient 
               colors={['#4C4EC0','#9fa0f6']} 
               start={{x: 1.0, y: 1.0}} end={{x: 0.0, y: 0.0}}
               style={{ 
@@ -115,6 +119,8 @@ const SuccessPage = ({}) => {
                 Go To Home
               </Text >
               </LinearGradient>
+                    </TouchableOpacity>
+                
                 </View>
 
             </View>
@@ -128,4 +134,4 @@ const SuccessPage = ({}) => {
 );
 }
 
-export default SuccessPage
+export default Error

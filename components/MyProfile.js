@@ -6,6 +6,8 @@ import { View ,
     FlatList,
     ScrollView,
     TouchableOpacity,
+    Modal,
+    Pressable,TextInput
    
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient';
@@ -23,18 +25,38 @@ import {
     useContractMetadata,
     useDirectListing,
     useOwnedNFTs,
-    ConnectWallet
-    
+    ConnectWallet,
+    useNFT,
+    Web3Button,
+    useCreateDirectListing
 } from "@thirdweb-dev/react-native";
 
 
 const Address ='0x8D3bc1C6B16c885Aa8F5241340De968F2F54A67f';
 const collection= "0x245d1343EC0dE0dBE5730dD38D2fB6dfdecbfdaF";
-
+const Loading = ({}) => {
+  return(
+    <View>
+    <Text style={{
+      fontSize: 24,
+      fontWeight:'600',
+      color:'#131330',
+      marginLeft:'5%',
+ }}>
+loading
+    </Text>
+    </View>
+  )
+}
 
 const MyProfile = ({}) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [nftid , setNftid] = useState('')
+  const [price, setPrice] = useState();
+  const [quantity, setQuantity]= useState(1);
+
     const connectedWallet =useAddress();
-const tokenid=0;
+   const tokenid=0;
     const { contract } = useContract(collection);
     const { data:Metadata } = useContractMetadata(contract);
   // const { data:nft, isLoading, } = useDirectListings(contract);
@@ -42,14 +64,23 @@ const tokenid=0;
     const { data:nft } = useDirectListings(contract);
    const image = nfts?.asset.image
    const { data:owned, isLoading:loading, error:err } = useOwnedNFTs(contract, connectedWallet);
- 
+   const { data: item , isLoading : loadings, error } = useNFT(contract, nftid);
+    
    function shortenString(inputString) {
     if (inputString.length <= 6) {
       return inputString;
-    } else {
+    }else if (inputString.length==null){
+      return 'not connected'
+    }
+     else {
       return inputString.substring(0, 3) + "..." + inputString.substring(inputString.length - 3);
     }
   }
+  const {
+    mutateAsync: createDirectListing,
+    isLoading,
+    er,
+  } = useCreateDirectListing(contract);
   return (
 <SafeAreaView 
 style={{
@@ -291,23 +322,265 @@ marginBottom:'15%'
                  </View>
                     </>
                     }
-             {owned && owned.map((nft)=>{
+             {owned && owned.map((owned)=>{
             return(
-               
+              <TouchableOpacity
+              onPress={() => (setModalVisible(true),setNftid(owned?.metadata.id) )
+              }
+                >
+               <View style={{
+             // backgroundColor:'red',
+              marginLeft:'5%',
+              marginBottom:'5%',
+              borderRadius:15,
+              height:190,
+              width:160,
+             // alignItems:'center'
+              
+               }}>
                     <Image
-                    source={{uri: nft?.metadata.image}}
+                    source={{uri: owned?.metadata.image}}
                      style={{   
                     borderRadius:15,
-                    marginLeft:'5%',
-                    marginBottom:'5%',
-                    height:160,
-                    width:160,
+                    //marginLeft:'5%',
+                   alignSelf:'center',
+                    height:150,
+                    width:150,
                  }} />
-               
+                 <Text style={{
+                  fontSize:14,
+                  fontWeight:600,
+                  color:'black',
+                  paddingLeft:'5%',
+                 }}>
+                  Name:{owned?.metadata.name}
+                 </Text>
+                 <Text style={{
+                  fontSize:14,
+                  fontWeight:600,
+                  color:'black',
+                  paddingLeft:'5%',
+                 }}>
+                  
+                 </Text>
+                </View>
+                </TouchableOpacity>
                 
             )
            }
            )}
+           </View>
+           <View style={{}}>
+           <Modal
+           animationType="slide"
+           transparent={true}
+           visible={modalVisible}
+           onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+            setModalVisible(!modalVisible); }}
+           >
+            <LinearGradient
+             colors={['#D7D3FF', 'white', 'white' ,'#D7D3FF']}
+             start={{ x: 0, y: 1 }}
+             end={{ x: 1, y: 0 }}
+             locations={[0, 0.35, 0.65, 1]}
+               style={{  flex:1,
+                width:'100%',
+                //backgroundColor:'red',
+                justifyContent: 'center',
+                alignItems: 'center',
+                alignSelf:'center'
+  }}
+            >
+              {!loadings &&
+        <View
+          style={{
+            width:'100%',
+            height:'100%',
+            //backgroundColor:'red',
+          }}
+          >     
+            <Image
+                source={{uri: item?.metadata.image}}
+                  style={{   
+                borderBottomLeftRadius:15,
+                borderBottomLeftRadius: 15,
+                //marginLeft:'5%',
+                alignSelf:'center',
+                height:'40%',
+                width:'100%',
+              }} />
+              <View style={{ marginHorizontal:'5%'}}>
+              <Text style={{
+              fontSize:14,
+              fontWeight:600,
+              color:'black',
+            }}>
+            name: {item?.metadata.name}
+              </Text>
+              <Text style={{
+              fontSize:14,
+              fontWeight:600,
+              color:'black',
+            }}>
+            description: {item?.metadata.description} 
+              </Text>
+              <LinearGradient 
+         colors={[
+          "#A49BFE80",
+          "#5F61F080"
+         ]}
+         style={{
+          flexDirection:'row',
+          // backgroundColor: 'yellow',
+          borderColor:'transparent',
+          borderWidth: 1,
+          borderRadius:10,
+          marginTop:10,
+          // marginBottom:5,
+        }}>
+          <View style={{
+            // backgroundColor:'red',
+            // padding:1,
+            borderColor:'transparent',
+            borderWidth: 1,
+            borderRadius:10,
+            width:'100%',
+            flexDirection:'row'
+          }}>
+            <View style={{                     
+            backgroundColor:'white',
+            flexDirection:'row',
+            width:'100%',
+            borderRadius:10,
+ }}>
+
+            <Feather style={{
+              marginLeft:15,
+              marginRight: 4,
+              alignSelf:'center',
+            }} name="smile" size={20} color={"rgba(153, 153, 167, 0.5)"} />
+            <TextInput 
+                placeholder="Enter the price of the NFT "
+                placeholderTextColor={"rgba(153, 153, 167, 0.5)"}
+                style={{
+                  width:'100%',
+                  paddingVertical: 8,
+                  color:'black',
+                  }}
+                  onChangeText={newprice=>setPrice(newprice) }
+                  defaultValue={0.01}
+                  inputMode='numeric'
+                >
+                </TextInput>
+            </View>
+                
+                </View>
+                </LinearGradient>
+                <LinearGradient 
+         colors={[
+          "#A49BFE80",
+          "#5F61F080"
+         ]}
+         style={{
+          flexDirection:'row',
+          // backgroundColor: 'yellow',
+          borderColor:'transparent',
+          borderWidth: 1,
+          borderRadius:10,
+          marginTop:10,
+          // marginBottom:5,
+        }}>
+          <View style={{
+            // backgroundColor:'red',
+            // padding:1,
+            borderColor:'transparent',
+            borderWidth: 1,
+            borderRadius:10,
+            width:'100%',
+            flexDirection:'row'
+          }}>
+            <View style={{                     
+            backgroundColor:'white',
+            flexDirection:'row',
+            width:'100%',
+            borderRadius:10,
+ }}>
+
+            <Feather style={{
+              marginLeft:15,
+              marginRight: 4,
+              alignSelf:'center',
+            }} name="smile" size={20} color={"rgba(153, 153, 167, 0.5)"} />
+            <TextInput 
+                placeholder="enter the quantity of the NFT"
+                placeholderTextColor={"rgba(153, 153, 167, 0.5)"}
+                style={{
+                  width:'100%',
+                  paddingVertical: 8,
+                  color:'black',
+                  }}
+         
+                  defaultValue={1}
+                  onChangeText={newquantity=>setQuantity(newquantity) }
+                  inputMode='numeric'
+                >
+                </TextInput>
+            </View>
+                
+                </View>
+                </LinearGradient>
+                <View style={{marginVertical:'5%'}}>
+              <Web3Button 
+              contractAddress={Address}
+              action={()=>
+                createDirectListing({
+                  assetContractAddress:collection,
+                  tokenId:item?.metadata.tokenId,
+                  pricePerToken:price,
+                  quantity:quantity,
+                })
+              }
+              style={{
+              marginTop:'5%'
+              }}
+              >
+
+                list nft 
+              </Web3Button>
+              </View>
+              </View>
+          <Pressable
+          onPress={() => setModalVisible(!modalVisible)}
+          style={{
+            //alignSelf:'flex-end',
+            height:'4%',
+            width:'100%',
+            backgroundColor:'red',
+            alignContent:'center',
+            alignItems:'center',
+            marginVertical:'5%'
+
+          }}
+          >
+            <Text
+            style={{
+              fontSize:14,
+              fontWeight:600,
+              color:'black',
+            }}
+            
+            >
+            close 
+            </Text>
+          </Pressable>
+          </View>}
+          {loadings &&
+          <Loading />
+
+          }
+            </LinearGradient>
+           </Modal>
            </View>
            {/* {!owned &&
             <View style={{

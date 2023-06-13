@@ -237,7 +237,7 @@ const SingIn = ({}) => {
             fontSize:20,
             color:'black'
             }} >
-            connected 
+            
           </Text>
           
           <ConnectWallet  />

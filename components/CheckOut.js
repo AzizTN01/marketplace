@@ -9,6 +9,7 @@ import { View ,
 
 } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
+import { useNavigation } from '@react-navigation/native';
 import { useBuyNow, useContract, Web3Button ,useUser,useEnglishAuction,useAddress} from "@thirdweb-dev/react-native";
 import { ScrollView } from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
@@ -46,6 +47,7 @@ const CheckOut = ({ route}) => {
     const description =nfts?.asset.description;
     const prop = nfts?.asset.properties;
     const listingId = nfts?.id
+    const  Navigation= useNavigation();
      
   return (
     
@@ -202,7 +204,7 @@ borderColor: "#7f81f3",
                           })}
                        
                             //  onSuccess={(result) => alert("Success!")}
-                            onError={(error) => alert(error)}
+                            onError={(error) =>Navigation.navigate('Error')}
                                >
                                  Pay Now
                                   

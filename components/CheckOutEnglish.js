@@ -13,8 +13,10 @@ import { View ,
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { useBuyNow, useContract, Web3Button ,lightTheme,useEnglishAuction,useAddress} from "@thirdweb-dev/react-native";
 import { ScrollView } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import Feather from "react-native-vector-icons/Feather"
+import Navigation from './Navigation';
 // import { ListingType } from "@thirdweb-dev/sdk";
 
 const Address ='0x8D3bc1C6B16c885Aa8F5241340De968F2F54A67f';
@@ -39,6 +41,7 @@ const CheckOutEnglish = ({ route}) => {
     const user = shortenString(nfts?.creatorAddress) ;
     // const description =nfts?.asset.description;
     // const prop = nfts?.asset.properties;
+   const  Navigation= useNavigation();
     const listingId = nfts?.id
    
      
@@ -71,9 +74,42 @@ const CheckOutEnglish = ({ route}) => {
       Check out
     </Text>
 </View>
+
+
 <View style={{
+    height:'30%',
+    width:'85%',
+   // backgroundColor:'red',
+    alignSelf: "center",
+}}>
+ <LinearGradient
+  
+  colors={['#9fa0f6', '#9fa0f6', '#7f81f3' ,'#4C4EC0']}
+  start={{x: 1.0, y: 0.0}}
+   end={{x: 0.0, y: 1.0}}
+   locations={[0, 0.25, 0.55, 1]}
+ style={{
+     flex:1,
+   //  alignItems:'center',
+     justifyContent:'space-evenly',
+     backgroundColor:'#4C4EC0',
+     borderRadius:12
+ }}>
+    <View style={{paddingLeft:'5%'}}>
+    <Text style={{
+        fontSize:14,
+        fontWeight:600,
+        color:'#fff'
+    }}
+    >
+    You are about to purchase a {name} from {user}
+    </Text>
+    </View>
+    <View style={{
     paddingVertical: "2%",
-    paddingHorizontal: "8%"
+    paddingHorizontal: "8%",
+    //backgroundColor:'red'
+    
 }}>
 <LinearGradient 
          colors={[
@@ -131,36 +167,6 @@ const CheckOutEnglish = ({ route}) => {
                 </LinearGradient>
 </View>
 
-<View style={{
-    height:'30%',
-    width:'85%',
-   // backgroundColor:'red',
-    alignSelf: "center",
-}}>
- <LinearGradient
-  
-  colors={['#9fa0f6', '#9fa0f6', '#7f81f3' ,'#4C4EC0']}
-  start={{x: 1.0, y: 0.0}}
-   end={{x: 0.0, y: 1.0}}
-   locations={[0, 0.25, 0.55, 1]}
- style={{
-     flex:1,
-   //  alignItems:'center',
-     justifyContent:'space-evenly',
-     backgroundColor:'#4C4EC0',
-     borderRadius:12
- }}>
-    <View style={{paddingLeft:'5%'}}>
-    <Text style={{
-        fontSize:14,
-        fontWeight:600,
-        color:'#fff'
-    }}
-    >
-    You are about to purchase a {name} from {user}
-    </Text>
-    </View>
-
     <View style={{
         flexDirection:'row',
        // alignContent:'space-around',
@@ -216,6 +222,7 @@ width:'100%',
 flexDirection:'row',
 justifyContent:'space-around',
 // marginTop:'2%'s
+marginVertical:'5%'
 }}>
     <Text  style={{
         fontSize:16,
@@ -254,8 +261,8 @@ borderColor: "#7f81f3",
                               }
                              onSuccess={(result) => alert("Success!")}
                              onError={(error) => {
-                                console.error(error)
-                                alert("Something went wrong!")}}
+                              Navigation.navigate('Error')
+                             }}
                                >
                                Bid Now
                                   
