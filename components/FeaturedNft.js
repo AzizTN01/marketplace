@@ -7,15 +7,17 @@ import { View ,
 } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { useBuyNow, useContract, Web3Button ,useDirectListings,useAddress} from "@thirdweb-dev/react-native";
+import { useNavigation } from '@react-navigation/native';
 // import { ListingType } from "@thirdweb-dev/sdk";
 
 const Address ='0x8D3bc1C6B16c885Aa8F5241340De968F2F54A67f';
 
 
-const FeaturedNft = ({title,artist,highestBid,currency,nft,owner,stat}) => {
+const FeaturedNft = ({title,artist,highestBid,currency,nft,owner,stat,item}) => {
     const { contract } = useContract(Address);
     const { mutateAsync: buyNow} = useBuyNow(contract);
    const { data:nfts } = useDirectListings(contract);
+   const navigation = useNavigation();
     const currentaddress = useAddress();
 
    
@@ -32,7 +34,12 @@ const FeaturedNft = ({title,artist,highestBid,currency,nft,owner,stat}) => {
 
 
 }}>
-    
+                                   <TouchableOpacity onPress={() =>
+                                  navigation.navigate('Buynft',{
+                                    item: item
+                                  })
+                                  }
+                                  >
   <Image
          source={{uri:nft}}
          style={{
@@ -43,6 +50,7 @@ const FeaturedNft = ({title,artist,highestBid,currency,nft,owner,stat}) => {
             width:250,
          }} 
          />
+         </TouchableOpacity>
          <View style={{
          
             flex:1,

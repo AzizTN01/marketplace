@@ -37,18 +37,22 @@ const Buynft = ({ route}) => {
           return inputString?.substring(0, 3) + "..." + inputString?.substring(inputString?.length - 3);
         
       };
-    const id = route.params.id
+    const {item} = route.params
     const { contract } = useContract(Address);
     const { mutateAsync: buyNow} = useBuyNow(contract);
     const currentaddress = useAddress();
-    const { data:nfts,isLoading:loading  } = useDirectListing(contract,id);
-    const price =  nfts?.currencyValuePerToken.displayValue + ' ' + nfts?.currencyValuePerToken.symbol;
-    const name = 'By '+nfts?.asset.name
-    const user = shortenString(nfts?.creatorAddress) ;
-    const description =nfts?.asset.description;
-    const prop = nfts?.asset.properties;
-    const listingId = nfts?.id;
+    // const { data:nfts,isLoading:loading ,error:error } = useDirectListing(contract,id);
+    const price =  item.currencyValuePerToken.displayValue + ' ' + item.currencyValuePerToken.symbol;
+    const name = 'By '+item.asset.name
+    const user = shortenString(item.creatorAddress) ;
+    const description =item.asset.description;
+    const prop = item.asset.properties;
+    const listingId = item.id;
     const navigation = useNavigation();
+
+    // function error (error){
+
+    // }
      
   return (
     
@@ -69,7 +73,7 @@ const Buynft = ({ route}) => {
   
  
  <Image
-         source={{uri:nfts?.asset.image}}
+         source={{uri:item.asset.image}}
          style={{
         //    alignSelf:'center',
             borderBottomLeftRadius:20,
@@ -120,7 +124,7 @@ const Buynft = ({ route}) => {
                         marginLeft: '10%',
                       //  backgroundColor:'red'
                     }}>
-                        {loading &&
+                        {/* {loading &&
                           <ContentLoader 
                           speed={2}
                           width={100}
@@ -141,7 +145,8 @@ const Buynft = ({ route}) => {
                         </ContentLoader>
                       
                       }
-                       {!loading && price}
+                       {!loading && price} */}
+                       {item.currencyValuePerToken.displayValue}
                     </Text>
 
                     </View>
@@ -170,7 +175,7 @@ const Buynft = ({ route}) => {
                     fontWeight:600,
                     color:'#393A90'
                 }}>
-                    {loading &&
+                    {/* {loading &&
                     <ContentLoader 
                     speed={2}
                     width={100}
@@ -190,17 +195,19 @@ const Buynft = ({ route}) => {
                     <Rect x="166" y="23" rx="3" ry="3" width="173" height="11" />
                   </ContentLoader>
                 
-                }
-                    {!loading&& name}
+                } */}
+                    {/* {!loading&& name} */}
+                    {item.asset.name}{"\n"}
+                    <Text style={{ fontSize: 14,color:'gray' }}>{shortenString(item.assetContractAddress)}</Text>
                 </Text>
                 <Text style={{
                     fontSize:14,
                     fontWeight:400,
                     color:'#A1A4B3'
                 }}>
-                   {!loading&&  user }
-                   {loading &&
-                    <ContentLoader 
+                   {/* {!loading&&  user } */}
+                   {/* {loading && */}
+                    {/* <ContentLoader 
                     speed={2}
                     width={100}
                     height={20}
@@ -219,7 +226,7 @@ const Buynft = ({ route}) => {
                     <Rect x="166" y="23" rx="3" ry="3" width="173" height="11" />
                   </ContentLoader>
                 
-                }
+                } */}
                    
                 </Text>
                 </View>
@@ -233,7 +240,7 @@ const Buynft = ({ route}) => {
                 }}>
                     Description
                 </Text>
-               {description && 
+               {item.asset.description && 
                 <Text style={{
                     fontSize:14,
                     fontWeight:400,
@@ -244,7 +251,7 @@ const Buynft = ({ route}) => {
                     }
                 </Text>
                 }
-                {!description &&
+                {!item.asset.description &&
                  <Text style={{
                     fontSize:14,
                     fontWeight:400,
@@ -269,7 +276,7 @@ const Buynft = ({ route}) => {
             
             
         }}>
-        {nfts?.creatorAddress != currentaddress &&
+        {item.creatorAddress != currentaddress &&
  <View  style={{
     alignSelf:'stretch',
     width:110,
@@ -288,7 +295,7 @@ const Buynft = ({ route}) => {
 />
         </View>
         }
-        {nfts?.creatorAddress== currentaddress &&
+        {item.creatorAddress== currentaddress &&
              <View  style={{
                 alignSelf:'stretch',
                 width:110,

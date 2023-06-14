@@ -189,7 +189,7 @@ const Home = ({}) => {
                     <View style={{
                        // backgroundColor:"yellow",
                         width:'100%',
-                        height:'20%',
+                        height:'100%',
                     }}>
                         <View style={{
                              flexDirection:'row',
@@ -253,36 +253,35 @@ foregroundColor="#d6d6d6"
 <Rect x="0" y="60" rx="2" ry="2" width="400" height="400" />
 </ContentLoader>
      }
+     {/* <Text style={{color:'black'}}>{JSON.stringify(nft)}</Text> */}
                         {!loader &&
                           <FlatList
-                     style={{flex:1,height:'100%',}}
-                     keyExtractor={(nft)=>nft?.asset.id}
+                     style={{ flex: 1, marginVertical:'5%'}}
+                     keyExtractor={(_,index)=> `direct_listings_${index.toString()}`}
                      data={nft}
                      horizontal={true}
                     showsHorizontalScrollIndicator={false}
-                       renderItem={()=>(
-                        nft.map((nft)=>{
-                          
+                       renderItem={({item})=> {
+                        // nft.map((nft)=>{
+                          // console.warn("item",item)
                             return(
                             
                               <View>
-                               <TouchableOpacity onPress={() =>
-                                  navigation.navigate('Buynft',{id:nft?.id})
-                                  }
-                                  >
                                  <FeaturedNft
-                                 title={nft?.asset.name} 
-                                 artist={nft?.asset.name} 
-                                 highestBid={nft?.currencyValuePerToken.displayValue} 
-                                 currency={nft?.currencyValuePerToken.name}
-                                 nft={nft?.asset.image}
-                                 owner={nft?.creatorAddress}
-                                 stat={nft?.quantity} />
-                                 </TouchableOpacity>
-                             </View> 
-                          
-                         )})
-                       )}
+                                 item={item}
+                                 id={nft?.id}
+                                 title={item?.asset.name} 
+                                 artist={item?.asset.name} 
+                                 highestBid={item?.currencyValuePerToken.displayValue} 
+                                 currency={item?.currencyValuePerToken.name}
+                                 nft={item?.asset.image}
+                                 owner={item?.creatorAddress}
+                                 stat={item?.quantity} />
+                                </View> 
+                            )
+                       }}
+                        //  )})
+                      //  )}
                        
                      />
                         }
@@ -324,7 +323,7 @@ foregroundColor="#d6d6d6"
                     <View style={{
                        // backgroundColor:"yellow",
                         width:'100%',
-                        height:'20%',
+                        height:'100%',
                     }}>
                         <View style={{
                              flexDirection:'row',
@@ -374,32 +373,29 @@ foregroundColor="#d6d6d6"
                         {!isLoading &&
                           <FlatList
                      style={{flex:1,height:'100%',}}
-                     keyExtractor={(nft)=>nft?.id}
+                     keyExtractor={(_,index)=> `en_auction_${index.toString()}`}
                      data={englishAuctions}
                      horizontal={true}
                      showsHorizontalScrollIndicator={false}
-                       renderItem={({})=>(
-                        englishAuctions && englishAuctions.map((englishAuctions)=>{
-                          return(
+                       renderItem={({item})=>(
                                <View>
                                 <TouchableOpacity onPress={() =>
                                    navigation.navigate('Buynftenglish',{id:englishAuctions?.id})
                                    }>
                                   <FeaturedNft
-                                  title={englishAuctions?.asset.name} 
-                                  artist={englishAuctions?.asset.name} 
-                                  highestBid={englishAuctions?.buyoutCurrencyValue.displayValue} 
-                                  currency={englishAuctions?.buyoutCurrencyValue.symbol}
-                                  nft={englishAuctions?.asset.image}
-                                  listingId={englishAuctions?.id}
-                                  stat={englishAuctions.quantity} />
+                                  title={item?.asset.name} 
+                                  artist={item?.asset.name} 
+                                  highestBid={item?.buyoutCurrencyValue.displayValue} 
+                                  currency={item?.buyoutCurrencyValue.symbol}
+                                  nft={item?.asset.image}
+                                  listingId={item?.id}
+                                  stat={item.quantity} />
                                   </TouchableOpacity>
-                              </View> )})
+                              </View> 
                        )}
                        
                      />
-                        }
-                     
+                     }
                         
                   
                         </View>
