@@ -1,4 +1,9 @@
-import { useAddress, useContract, useSDK } from "@thirdweb-dev/react-native";
+import {
+  useAddress,
+  useContract,
+  useSDK,
+  useStorageUpload,
+} from "@thirdweb-dev/react-native";
 import React, { useState } from "react";
 import {
   SafeAreaView,
@@ -10,13 +15,15 @@ import {
   Modal,
   Dimensions,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-
+import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 // import { ListingType } from "@thirdweb-dev/sdk";
 import Feather from "react-native-vector-icons/Feather";
 import Replicate from "replicate";
-
+import axios from "axios";
+import { err } from "react-native-svg/lib/typescript/xml";
 const Address = "0x245d1343EC0dE0dBE5730dD38D2fB6dfdecbfdaF";
 const replicate = new Replicate({
   auth: "272cf1e7ead952ace8664f77eb638a77175b3b84",
@@ -26,11 +33,52 @@ const Mintnft = ({ route }) => {
   const [nftName, setNFTName] = useState("");
   const [nftDesc, setNftDesc] = useState("");
   const [nftSymbol, setNftSymbol] = useState("");
+  const [loading, setloading] = useState(false)
   const [aiText, setAiText] = useState("");
+  const [localFile, setLocalFile] = useState(null);
   const { contract } = useContract(Address);
   const [img, setImg] = useState(null);
   const userAdr = useAddress();
   const sdk = useSDK();
+  const uploadLocalFile = async () => {
+    const localImg = await launchImageLibrary();
+    console.log("Local", localImg["assets"][0]);
+    const imgFile = localImg.assets[0];
+    setLocalFile(imgFile);
+    const imgToUpload = {
+      uri: imgFile.uri,
+      type: imgFile.type,
+      name: imgFile.fileName,
+    };
+    console.log("To Uplaod", imgToUpload);
+    const formData = new FormData();
+    formData.append("file", imgToUpload);
+    setloading(true)
+    const resp = axios.post(
+      `https://azure-millipede-kilt.cyclic.app/upload`,
+      formData,
+      {
+        headers: {
+          
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+    resp
+      .then((resp) => {
+        console.log("resp", resp.data);
+        setImg(resp.data.url)
+        setloading(false)
+      })
+      .catch((err) => {
+        console.log(err);
+        setloading(false)
+
+      });
+    // } catch (error) {
+    //   console.log("Error", error.message)
+    // }
+  };
   const mintNft = async () => {
     collectionAddress = await sdk.deployer.deployNFTCollection({
       name: nftName,
@@ -432,6 +480,9 @@ const Mintnft = ({ route }) => {
                   justifyContent: "center",
                   alignItems: "center",
                 }}
+                onPress={() => {
+                  uploadLocalFile();
+                }}
               >
                 <Text style={{ color: "#FFFF" }}>Upload Image</Text>
               </TouchableOpacity>
@@ -459,7 +510,10 @@ const Mintnft = ({ route }) => {
                 </Text>
               </TouchableOpacity>
             </View>
-            {img && (
+            {loading ? 
+          <ActivityIndicator size={"large"} color={"blue"} />
+            :
+            img && (
               <Image
                 source={{ uri: img }}
                 style={{
@@ -467,19 +521,22 @@ const Mintnft = ({ route }) => {
                   height: 120,
                   resizeMode: "contain",
                   marginTop: 5,
-                  marginBottom:5
+                  marginBottom: 5,
                 }}
               />
             )}
-            <TouchableOpacity style={{
-              width: "100%",
-             padding:10,
-              backgroundColor: "#9798f4",
-              borderRadius: 10,
-              elevation: 3,
-              justifyContent: "center",
-              alignItems: "center", alignSelf: "center", marginTop: 5
-            }}
+            <TouchableOpacity
+              style={{
+                width: "100%",
+                padding: 10,
+                backgroundColor: "#9798f4",
+                borderRadius: 10,
+                elevation: 3,
+                justifyContent: "center",
+                alignItems: "center",
+                alignSelf: "center",
+                marginTop: 5,
+              }}
               onPress={() => {
                 mintNft();
               }}
