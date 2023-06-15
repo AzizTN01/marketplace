@@ -2,9 +2,10 @@ import {
   useAddress,
   useContract,
   useSDK,
+  useStorage,
   useStorageUpload,
 } from "@thirdweb-dev/react-native";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -30,11 +31,15 @@ const replicate = new Replicate({
 });
 const Mintnft = ({ route }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const storage = useStorage();
   const [nftName, setNFTName] = useState("");
   const [nftDesc, setNftDesc] = useState("");
   const [nftSymbol, setNftSymbol] = useState("");
-  const [loading, setloading] = useState(false)
+  const [loading, setloading] = useState(false);
   const [aiText, setAiText] = useState("");
+  const [collectionAddress, setCollectionAddress] = useState("");
+  const { contract: collection } = useContract(collectionAddress);
+
   const [localFile, setLocalFile] = useState(null);
   const { contract } = useContract(Address);
   const [img, setImg] = useState(null);
@@ -53,57 +58,51 @@ const Mintnft = ({ route }) => {
     console.log("To Uplaod", imgToUpload);
     const formData = new FormData();
     formData.append("file", imgToUpload);
-    setloading(true)
+    setloading(true);
     const resp = axios.post(
       `https://azure-millipede-kilt.cyclic.app/upload`,
       formData,
       {
         headers: {
-          
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       }
     );
     resp
       .then((resp) => {
         console.log("resp", resp.data);
-        setImg(resp.data.url)
-        setloading(false)
+        setImg(resp.data.url);
+        setloading(false);
       })
       .catch((err) => {
         console.log(err);
-        setloading(false)
-
+        setloading(false);
       });
     // } catch (error) {
     //   console.log("Error", error.message)
     // }
   };
   const mintNft = async () => {
-    collectionAddress = await sdk.deployer.deployNFTCollection({
-      name: nftName,
-      symbol: nftSymbol,
-      primary_sale_recipient: userAdr,
-      image: img,
-      description: nftDesc,
-      /* Optional fields below */
-      //platform_fee_recipient: "0x00000",
-      //platform_fee_basis_points: "5",
-      //fee_recipient: "0x00000",
-      //seller_fee_basis_points: "10",
-      //external_link: "YOUR_HTTP_URL",
-      //Descriptions for the fields above can be found here: https://portal.thirdweb.com/typescript/sdk.nftcontractdeploymetadata
-    });
-    const nftCollection = await sdk.getNFTCollection(collectionAddress);
-    mintTxnHash = await nftCollection.mintToSelf?.({
-      name: nftName,
-      description: nftDesc,
-      image: img,
-    });
-    console.log(
-      "Minted NFT Transaction Hash: ",
-      mintTxnHash.receipt.transactionHash
-    );
+    try {
+      const contractAddress = await sdk.deployer.deployNFTCollection({
+        name: nftName,
+        symbol: nftSymbol,
+        // this address comes from connected wallet address
+        primary_sale_recipient: userAdr,
+      });
+      const collectionContract = await sdk.getContract(contractAddress)
+      //setCollectionAddress(contractAddress);
+      const metadata = {
+        name: nftName,
+        description: nftDesc,
+        image: img,
+      };
+
+      const resp = await collectionContract.mintTo(userAdr, metadata);
+      console.log("Resp", resp)
+    } catch (error) {
+      console.log("Error", error.message)
+    }
   };
   const generateImg = async () => {
     const output = await replicate.run(
@@ -510,20 +509,21 @@ const Mintnft = ({ route }) => {
                 </Text>
               </TouchableOpacity>
             </View>
-            {loading ? 
-          <ActivityIndicator size={"large"} color={"blue"} />
-            :
-            img && (
-              <Image
-                source={{ uri: img }}
-                style={{
-                  width: "100%",
-                  height: 120,
-                  resizeMode: "contain",
-                  marginTop: 5,
-                  marginBottom: 5,
-                }}
-              />
+            {loading ? (
+              <ActivityIndicator size={"large"} color={"blue"} />
+            ) : (
+              img && (
+                <Image
+                  source={{ uri: img }}
+                  style={{
+                    width: "100%",
+                    height: 120,
+                    resizeMode: "contain",
+                    marginTop: 5,
+                    marginBottom: 5,
+                  }}
+                />
+              )
             )}
             <TouchableOpacity
               style={{

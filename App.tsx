@@ -1,29 +1,21 @@
 import React, { useState } from "react";
-import "react-native-gesture-handler";
 import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
   Image,
+  Text,
+  View
 } from "react-native";
+import "react-native-gesture-handler";
 
 import {
   ConnectWallet,
-  useUser,
-  useContract,
   ThirdwebProvider,
+  useContract,
   useContractMetadata,
-  useDirectListings,
-  useActiveListings,
+  useUser
 } from "@thirdweb-dev/react-native";
 import LinearGradient from "react-native-linear-gradient";
-import Splash from "./components/Splash";
 import Navigation from "./components/Navigation";
 import SingIn from "./components/SingIn";
-import Error from "./components/error";
-import { NavigationContainer } from "@react-navigation/native";
 
 //import Navigator from './components/Navigator';
 
