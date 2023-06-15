@@ -203,6 +203,12 @@ const Home = ({}) => {
                         }}>
                         Direct Listings
                         </Text>
+                        <TouchableOpacity onPress={()=> {
+                          navigation.navigate("SeeAll",{
+                            nft:nft,
+                            navroute: "Buynft"
+                          })
+                        }}>
                         <Text style={{
                             color:"#5F61F0",
                             fontSize:18,
@@ -210,6 +216,7 @@ const Home = ({}) => {
                         }}>
                         See all
                         </Text>
+                        </TouchableOpacity>
                         </View>
                         
                         <View style={{
@@ -284,7 +291,6 @@ foregroundColor="#d6d6d6"
                                  nft={item?.asset.image}
                                  owner={item?.creatorAddress}
                                  stat={item?.quantity} />
-                                 {/* </TouchableOpacity> */}
                                 </View> 
                                 
                             )
@@ -346,6 +352,12 @@ foregroundColor="#d6d6d6"
                         }}>
                         english Auctions
                         </Text>
+                        <TouchableOpacity onPress={()=> {
+                          navigation.navigate("SeeAll",{
+                            nft: englishAuctions,
+                            navroute: "Buynftenglish"
+                          })
+                        }}>
                         <Text style={{
                             color:"#5F61F0",
                             fontSize:18,
@@ -353,6 +365,7 @@ foregroundColor="#d6d6d6"
                         }}>
                         See all
                         </Text>
+                        </TouchableOpacity>
                         </View>
                         
                         <View style={{

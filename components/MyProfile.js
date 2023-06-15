@@ -18,7 +18,7 @@ import CheckBox from '@react-native-community/checkbox';
 import ContentLoader, { Rect, Circle, Path } from "react-content-loader/native"
 import Feather from "react-native-vector-icons/Feather"
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { 
+import {
     useAddress, 
     useContract,
     useDirectListings,

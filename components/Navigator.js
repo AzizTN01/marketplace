@@ -15,6 +15,7 @@ import { View, Image, Text, TouchableOpacity } from "react-native";
 
 import Feather from "react-native-vector-icons/Feather";
 import SuccessPage from "./SuccessPage";
+import SeeAll from "./SeeAll";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -53,6 +54,7 @@ const Homestack = ({}) => {
         component={BuynftEnglish}
       />
       <Stack.Screen headerShown={false} name="CheckOut" component={CheckOut} />
+      <Stack.Screen headerShown={false} name="SeeAll" component={SeeAll} />
       <Stack.Screen
         headerShown={false}
         name="NftCheckOut"
