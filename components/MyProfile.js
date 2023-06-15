@@ -30,6 +30,8 @@ import {
     Web3Button,
     useCreateDirectListing
 } from "@thirdweb-dev/react-native";
+import ProfileAuction from './Profile_Auction';
+import ProfileDirectListings from './Profile_DirectListings';
 
 
 const Address ='0x8D3bc1C6B16c885Aa8F5241340De968F2F54A67f';
@@ -51,6 +53,18 @@ loading
 
 const MyProfile = ({}) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [selectedItem, setselectedItem] = useState(null)
+  
+  // const [direct, setDirect] = useState(true);
+  // const [bid, setBid] = useState(false);
+
+  const [togglePage, settogglePage] = useState('direct')
+
+  // const handlePressDirect = ( bid, direct ) => {
+  //   direct ? setBid(false) : setDirect(true)
+  // };
+  
+
   const [nftid , setNftid] = useState('')
   const [price, setPrice] = useState();
   const [quantity, setQuantity]= useState(1);
@@ -60,12 +74,12 @@ const MyProfile = ({}) => {
     const { contract } = useContract(collection);
     const { data:Metadata } = useContractMetadata(contract);
   // const { data:nft, isLoading, } = useDirectListings(contract);
-    const { data:nfts,  } = useDirectListing(contract,tokenid);
+    const { data:nfts,  } = useDirectListing(contract);
     const { data:nft } = useDirectListings(contract);
    const image = nfts?.asset.image
    const { data:owned, isLoading:loading, error:err } = useOwnedNFTs(contract, connectedWallet);
    const { data: item , isLoading : loadings, error } = useNFT(contract, nftid);
-    
+    console.error(owned)
    function shortenString(inputString) {
     if (inputString.length <= 6) {
       return inputString;
@@ -323,9 +337,12 @@ marginBottom:'15%'
                     </>
                     }
              {owned && owned.map((owned)=>{
+              
             return(
               <TouchableOpacity
-              onPress={() => (setModalVisible(true),setNftid(owned?.metadata.id) )
+              onPress={() => {
+                setselectedItem(owned)
+                setModalVisible(true),setNftid(owned?.metadata.id)}
               }
                 >
                <View style={{
@@ -401,205 +418,104 @@ marginBottom:'15%'
             //backgroundColor:'red',
           }}
           >     
-            {/* <Image
-                source={{uri: item?.metadata.image}}
-                  style={{   
-                borderBottomLeftRadius:15,
-                borderBottomLeftRadius: 15,
-                //marginLeft:'5%',
-                alignSelf:'center',
-                height:'40%',
-                width:'100%',
-              }} /> */}
-              <View style={{ marginHorizontal:'5%', }}>
-                <View style={{flexDirection:'row', paddingVertical:"3%"}}>
-              <Text style={{
-              fontSize:16,
-              fontWeight:600,
-              color:'black',
-            }}> name:
-              </Text>
-              <Text style={{
-              fontSize:14,
-              fontWeight:400,
-              color:'black',
-            }}>  {item?.metadata.name}
-            </Text>
-            </View>
-            <View style={{ flexDirection:'column'}}>
-              <Text style={{
-              fontSize:16,
-              fontWeight:600,
-              color:'black',
-            }}>
-            description: 
-              </Text>
-              <Text style={{
-              fontSize:14,
-              fontWeight:400,
-              color:'black',
-            }}>
-            {item?.metadata.description} 
-              </Text>
-              </View>
-              <LinearGradient 
-         colors={[
-          "#A49BFE80",
-          "#5F61F080"
-         ]}
-         style={{
-          flexDirection:'row',
-          // backgroundColor: 'yellow',
-          borderColor:'transparent',
-          borderWidth: 1,
-          borderRadius:10,
-          marginTop:10,
-          // marginBottom:5,
-        }}>
           <View style={{
-            // backgroundColor:'red',
-            // padding:1,
-            borderColor:'transparent',
-            borderWidth: 1,
-            borderRadius:10,
-            width:'100%',
+            //backgroundColor:'red',
             flexDirection:'row'
           }}>
-            <View style={{                     
-            backgroundColor:'white',
-            flexDirection:'row',
-            width:'100%',
-            borderRadius:10,
- }}>
-
-            <Feather style={{
-              marginLeft:15,
-              marginRight: 4,
-              alignSelf:'center',
-            }} name="smile" size={20} color={"rgba(153, 153, 167, 0.5)"} />
-            <TextInput 
-                placeholder="Enter the price of the NFT "
-                placeholderTextColor={"rgba(153, 153, 167, 0.5)"}
-                style={{
-                  width:'100%',
-                  paddingVertical: 8,
-                  color:'black',
-                  }}
-                  onChangeText={newprice=>setPrice(newprice) }
-                  defaultValue={0.01}
-                  inputMode='numeric'
-                >
-                </TextInput>
-            </View>
-                
-                </View>
-                </LinearGradient>
-                
-                <LinearGradient 
-         colors={[
-          "#A49BFE80",
-          "#5F61F080"
-         ]}
-         style={{
-          flexDirection:'row',
-          // backgroundColor: 'yellow',
-          borderColor:'transparent',
-          borderWidth: 1,
-          borderRadius:10,
-          marginTop:10,
-          // marginBottom:5,
-        }}>
-          <View style={{
-            // backgroundColor:'red',
-            // padding:1,
-            borderColor:'transparent',
-            borderWidth: 1,
-            borderRadius:10,
-            width:'100%',
-            flexDirection:'row'
-          }}>
-            <View style={{                     
-            backgroundColor:'white',
-            flexDirection:'row',
-            width:'100%',
-            borderRadius:10,
- }}>
-
-            <Feather style={{
-              marginLeft:15,
-              marginRight: 4,
-              alignSelf:'center',
-            }} name="smile" size={20} color={"rgba(153, 153, 167, 0.5)"} />
-            <TextInput 
-                placeholder="enter the quantity of the NFT"
-                placeholderTextColor={"rgba(153, 153, 167, 0.5)"}
-                style={{
-                  width:'100%',
-                  paddingVertical: 8,
-                  color:'black',
-                  }}
-         
-                  defaultValue={1}
-                  onChangeText={newquantity=>setQuantity(newquantity) }
-                  inputMode='numeric'
-                >
-                </TextInput>
-            </View>
-                
-                </View>
-                </LinearGradient>
-                <View style={{marginVertical:'5%'}}>
-              <Web3Button 
-              contractAddress={Address}
-              action={()=>
-                createDirectListing({
-                  assetContractAddress:collection,
-                  tokenId:item?.metadata.tokenId,
-                  pricePerToken:price,
-                  quantity:quantity,
-                })
-              }
-              onError={(error) => {
-                Navigation.navigate('Error')
-                alert(error)
-               }}
-               onSuccess={(error) => {
-                Navigation.navigate('SuccessPage')
-                alert(error)
-               }}
-              style={{
-              marginTop:'5%'
-              }}
-              >
-
-                list nft 
-              </Web3Button>
-              </View>
-              </View>
           <Pressable
-          onPress={() => setModalVisible(!modalVisible)}
-          style={{
-            //alignSelf:'flex-end',
-            height:'4%',
-            width:'100%',
-            backgroundColor:'#fff',
+           onPress={() => setModalVisible(!modalVisible)}
+           style={{alignSelf:'flex-start'}}
+          >
+            <Feather style={{
+              marginLeft:15,
+              marginRight: 4,
+              alignSelf:'center',
+            }} name="arrow-left" size={28} color={"rgba(2, 2, 2, 0.99)"} />
+          </Pressable>
+          <Text
+           style={{fontSize:18,
+                  fontWeight:600,
+                  color:'black',
+                  paddingLeft:'5%',
+                 // paddingBottom: '5%',
+                  }}>Enter Price
+
+          </Text>
+          </View>
+          <View style={{
+            height: 38,
+            width: "80%",
+            backgroundColor:'#9e9e9e9e',
+            alignSelf:'center',
+            flexDirection:'row',
+           borderRadius:12,
+           
+          }}>
+            <TouchableOpacity 
+            onPress={()=>{
+              settogglePage('direct')
+            }}
+            style={{
+             flex:1,
+             backgroundColor:togglePage === 'direct'? '#A49BFE': 'transparent',
+             borderRadius:12,
+             alignContent:'center',
+             alignItems:'center',
+             justifyContent:'center'
+
+            }}>
+            <View style={{
+
+            }} > 
+            <Text
+           style={{fontSize:13,
+                  fontWeight:600,
+                  color: 'white',
+                  paddingLeft:'5%',
+                 // paddingBottom: '5%',
+                  }}> direct listing</Text>
+            </View>
+            </TouchableOpacity>
+            <TouchableOpacity 
+                        onPress={()=>{
+                          settogglePage('bid')
+                        }}
+            style={{             flex:1,
+              // backgroundColor:'blue',
+              backgroundColor:togglePage === 'bid'? '#A49BFE': 'transparent',
+             borderRadius:12,
             alignContent:'center',
             alignItems:'center',
-            marginVertical:'5%'
-
-          }}
-          >
-            <Text
-            style={{
-              fontSize:14,
-              fontWeight:600,
-              color:'black',
-            }}
-            
+            justifyContent:'center'}}
+            // onPress={
+            //   handlePressAuction()
+            // }
             >
-            close 
-            </Text>
-          </Pressable>
+            <View style={{
+
+            }} >
+              <Text
+              style={{fontSize:13,
+                  fontWeight:600,
+                  color: 'white',
+                  paddingLeft:'5%',
+                 // paddingBottom: '5%',
+                  }}> auction </Text>
+
+            </View>
+            </TouchableOpacity>
+            </View>
+          {/* </View> */}
+          {togglePage === 'direct' ?
+                    <ProfileDirectListings selectedItem={selectedItem} />
+
+          : togglePage === 'bid' && 
+          <ProfileAuction selectedItem={selectedItem} />
+
+
+          }
+
+
           </View>}
           {loadings &&
           <Loading />
