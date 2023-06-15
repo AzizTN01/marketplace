@@ -10,41 +10,99 @@ import { View ,
     ActivityIndicator
 
 } from 'react-native'
+//import {} from "@third"
 import Ionicons from "react-native-vector-icons/Ionicons"
-import { useBuyNow, useContract, Web3Button ,lightTheme,useEnglishAuction,useAddress} from "@thirdweb-dev/react-native";
+import { useBuyNow, useContract, Web3Button ,lightTheme,useEnglishAuction,useAddress,useMakeBid,useContractWrite, useValidEnglishAuctions, useNFT} from "@thirdweb-dev/react-native";
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
-import Feather from "react-native-vector-icons/Feather"
+import Feather from "react-native-vector-icons/Feather";
+// import { NFT } from '@thirdweb-dev/sdk';
 import Navigation from './Navigation';
+import { CONTRACT_ABI } from '../utils/ContractABI';
+import { MARKETPLACE_ADDRESS, NFT_COLLECTION_ADDRESS } from '../utils/contract';
 // import { ListingType } from "@thirdweb-dev/sdk";
 
-const Address ='0x8D3bc1C6B16c885Aa8F5241340De968F2F54A67f';
+// const Address ='0x8D3bc1C6B16c885Aa8F5241340De968F2F54A67f';
 
 
 
 const CheckOutEnglish = ({ route}) => {
-    const [amountBid, setamountBid] = useState(0);
-    const [loading, setloading] = useState(false)
+    const { contract: marketplace, isLoading: loadingMarketplace } = 
+    useContract(
+        MARKETPLACE_ADDRESS, 
+        "marketplace-v3"
+    );
+    const { contract: nftCollection } = useContract(NFT_COLLECTION_ADDRESS);
+
+const {id,item} = route.params
+console.warn(item)
+const [amountBid, setamountBid] = useState(0);
+console.warn(item.tokenId)
+
+    const { data: auctionListing, isLoading: loadingAuction } =
+    useValidEnglishAuctions(marketplace, {
+        tokenContract: NFT_COLLECTION_ADDRESS,
+        tokenId: item.tokenId,
+    });
+
+
+    // async function buyListing() {
+    //     let txResult;
+
+    //     //Add for auction section
+    //     if (auctionListing?.[0]) {
+    //         txResult = await marketplace?.englishAuctions.buyoutAuction(
+    //             auctionListing[0].id
+    //         );
+    //     } else {
+    //         throw new Error("No listing found");
+    //     }
+
+    //     return txResult;
+    // }
+
     function shortenString(inputString) {
-   
-          return inputString?.substring(0, 3) + "..." + inputString?.substring(inputString?.length - 3);
-        
-      };
-    const id = route.params.id
-    const { contract } = useContract(Address);
-    const { mutateAsync: buyNow} = useBuyNow(contract);
+        return inputString?.substring(0, 3) + "..." + inputString?.substring(inputString?.length - 3);
+    };
+    const { contract } = useContract(MARKETPLACE_ADDRESS,CONTRACT_ABI);
+    // const { mutateAsync: buyNow} = useBuyNow(contract);
     const currentaddress = useAddress();
     const { data:nfts } = useEnglishAuction(contract,id);
-    const price =  nfts?.minimumBidCurrencyValue?.displayValue+ ' ' + nfts?.buyoutCurrencyValue.symbol;
-    const name = nfts?.asset.name
-    const user = shortenString(nfts?.creatorAddress) ;
-    // const description =nfts?.asset.description;
-    // const prop = nfts?.asset.properties;
+    const price =  item?.minimumBidCurrencyValue?.displayValue+ ' ' + item?.buyoutCurrencyValue.symbol;
+    const name = item?.asset.name
+    const user = shortenString(item?.creatorAddress) ;
+    const description =item?.asset.description;
+    const prop = item?.asset.properties;
    const  Navigation= useNavigation();
-    const listingId = nfts?.id
+    const listingId = item?.id
+    // const { mutateAsync: makeBid, isLoading, error } = useMakeBid(contract);   //const makeBid = useMakeBid(contract)
+    //   console.error(makeBid)
    
+    //   const handleBid = async () => {
+    //    // const makeBid = useMakeBid(contract)
+    //     try {
+    //         const placeBid = makeBid.placeBid
+    //     await placeBid(1);
+    //    // console.warn(make)
+    //     //console.warn("success")
+    // }catch(err) {
+    //     console.error(makeBid)
+    //     console.error(err)
+    // }
+    //   }
      
+    //   const { mutateAsync: bidInAuction} = useContractWrite(contract, "bidInAuction")
+
+//   const call = async () => {
+//     try {
+//       const data = await bidInAuction({ args: [_auctionId, _bidAmount] });
+//       console.info("contract call successs", data);
+//     } catch (err) {
+//       console.error("contract call failure", err);
+//     }
+//   }
+
   return (
     
 <SafeAreaView style={{
@@ -79,7 +137,7 @@ const CheckOutEnglish = ({ route}) => {
 <View style={{
     height:'30%',
     width:'85%',
-   // backgroundColor:'red',
+    //backgroundColor:'red',
     alignSelf: "center",
 }}>
  <LinearGradient
@@ -148,6 +206,7 @@ const CheckOutEnglish = ({ route}) => {
             }} name="dollar-sign" size={20} color={"rgba(153, 153, 167, 0.5)"} />
             <TextInput 
                 value={amountBid}
+                
                 onChangeText={(text)=> {
                     setamountBid(text)
                 }}
@@ -186,7 +245,7 @@ const CheckOutEnglish = ({ route}) => {
         fontWeight:600,
         color:'#fff'
     }} >
-            {amountBid && amountBid !== "" ? `${amountBid} ${nfts?.buyoutCurrencyValue.symbol}`  : price ? price : <ActivityIndicator size={"small"} color={"white"} />}
+            {amountBid && amountBid !== "" ? `${amountBid} ${item?.buyoutCurrencyValue.symbol}`  : price ? price : <ActivityIndicator size={"small"} color={"white"} />}
         </Text>
     </View>
 
@@ -237,7 +296,12 @@ marginVertical:'5%'
         fontWeight:'bold',
         color:'black'
     }} >
-            {amountBid && amountBid !== "" ? `${amountBid} ${nfts?.buyoutCurrencyValue.symbol}`  : price ? price : <ActivityIndicator size={"small"} color={"white"} />}
+    {amountBid && amountBid !== "" ?
+        `${amountBid} ${item?.buyoutCurrencyValue.symbol}` : 
+        price ?
+        price : 
+        <ActivityIndicator size={"small"} color={"white"} />
+    }
     </Text>
 </View>
  
@@ -253,20 +317,29 @@ borderWidth: 3,
 padding:3,
 borderColor: "#7f81f3",
  }}>
- <Web3Button
-                     contractAddress={Address}
+ <Web3Button 
+                     contractAddress={MARKETPLACE_ADDRESS}
                      theme="dark"
-                      action={() =>
-                        contract.englishAuctions.makeBid(amountBid,id)
-                              }
-                             onSuccess={(result) => alert("Success!")}
+                        action={async () => await marketplace?.englishAuctions.makeBid(
+                                auctionListing[0].id,
+                                amountBid
+                            )}
+                             onSuccess={(result) => {
+                                Navigation.navigate("Success")
+                                // alert("Success!",result)
+                             }}
                              onError={(error) => {
                               Navigation.navigate('Error')
+                              alert(error)
                              }}
                                >
                                Bid Now
                                   
                   </Web3Button>
+                  {/* <TouchableOpacity onPress={async ()=>{
+                   await handleBid()}}>
+<Text>bid Now</Text>
+                  </TouchableOpacity> */}
  </View>
 
 </LinearGradient>

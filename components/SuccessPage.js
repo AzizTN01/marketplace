@@ -3,15 +3,18 @@ import { View ,
     SafeAreaView,
     Image,
     Text,
+    TouchableOpacity,
    
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient';
 // import {} from "react-native-vector"
 import CheckBox from '@react-native-community/checkbox';
 import Feather from "react-native-vector-icons/Feather"
+import { useNavigation } from '@react-navigation/native';
 
 
 const SuccessPage = ({}) => {
+  const navigation = useNavigation();
   const [checkboxval, setcheckboxval] = useState(false);
   const toggleCheckbox = () => {
     setcheckboxval(!checkboxval)
@@ -48,7 +51,7 @@ const SuccessPage = ({}) => {
                 
             }}>
                  <Image
-         source={require('../assets/images/eroor3.png')}
+         source={require('../assets/images/right.png')}
          style={{
             width:200,
             height:200,
@@ -73,10 +76,10 @@ const SuccessPage = ({}) => {
                     <Text  style={{
                         fontSize:24,
                         fontWeight:500,
-                        color:'#454459'
+                        color:'green'
                         
                     }}>
-                       Oops! Eroor
+                       Transaction Success
                     </Text>
                     <Text  style={{
                         fontSize:14,
@@ -88,13 +91,16 @@ const SuccessPage = ({}) => {
                         textAlign:'center'
                         
                     }}>
-                       Looks like Something went wrong please try later 
+                       Your Transaction has been transfered.
                     </Text>
                 </View>
                
                 <View style={{
                     marginTop:'20%'
                 }}>
+                  <TouchableOpacity onPress={()=> {
+                    navigation.navigate("Home");
+                  }}>
                 <LinearGradient 
               colors={['#4C4EC0','#9fa0f6']} 
               start={{x: 1.0, y: 1.0}} end={{x: 0.0, y: 0.0}}
@@ -115,6 +121,7 @@ const SuccessPage = ({}) => {
                 Go To Home
               </Text >
               </LinearGradient>
+              </TouchableOpacity>
                 </View>
 
             </View>

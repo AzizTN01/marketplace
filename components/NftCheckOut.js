@@ -9,10 +9,12 @@ import { View ,
 
 } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
-import { useBuyNow, useContract, Web3Button ,useDirectListing,useEnglishAuction,useAddress} from "@thirdweb-dev/react-native";
+import { useBuyNow, useContract, Web3Button ,useDirectListing,useValidDirectListings,useEnglishAuction,useAddress,useNFT, useValidEnglishAuctions} from "@thirdweb-dev/react-native";
 import { ScrollView } from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
-// import { ListingType } from "@thirdweb-dev/sdk";
+import { ListingType } from "@thirdweb-dev/sdk";
+import { MARKETPLACE_ADDRESS, NFT_COLLECTION_ADDRESS } from '../utils/contract';
+import { useNavigation } from '@react-navigation/native';
 
 const Address ='0x8D3bc1C6B16c885Aa8F5241340De968F2F54A67f';
 
@@ -30,23 +32,50 @@ const Address ='0x8D3bc1C6B16c885Aa8F5241340De968F2F54A67f';
 
 const NftCheckOut = ({ route}) => {
 
+    const navigation = useNavigation();
+    const { contract: marketplace, isLoading: loadingMarketplace } = 
+    useContract(
+        MARKETPLACE_ADDRESS, 
+        "marketplace-v3"
+    );
+    const { contract: nftCollection } = useContract(NFT_COLLECTION_ADDRESS);
+    const {id,item} = route.params
+
+    const { data: directListing, isLoading: loadingDirectListing } = 
+    useValidDirectListings(marketplace, {
+        tokenContract: NFT_COLLECTION_ADDRESS, 
+        tokenId: item?.tokenId,
+    });
+
     function shortenString(inputString) {
-   
           return inputString?.substring(0, 3) + "..." + inputString?.substring(inputString?.length - 3);
-        
       };
-    const id = route.params.id
-    const { contract } = useContract(Address);
-    const { mutateAsync: buyNow,error} = useBuyNow(contract);
-    const currentaddress = useAddress();
-    const { data:nfts,error:err } = useDirectListing(contract,id);
-    const price =  nfts?.currencyValuePerToken.displayValue+ ' ' + nfts?.currencyValuePerToken.symbol;
-    const name = nfts?.asset.name
-    const user = shortenString(nfts?.creatorAddress) ;
-    const description =nfts?.asset.description;
-    const prop = nfts?.asset.properties;
-    const listingId = nfts?.id
-   
+    useContract(
+        Address, 
+        "marketplace-v3"
+    );
+    const price =  item?.currencyValuePerToken.displayValue+ ' ' + item?.currencyValuePerToken.symbol;
+    const name = item?.asset.name
+    const user = shortenString(item?.creatorAddress) ;
+    const description =item?.asset.description;
+    const prop = item?.asset.properties;
+    const listingId = item?.id
+    const listingType= 0; // the listing id to check
+
+
+    async function buyListing() {
+        let txResult;
+        if (directListing?.[0]){
+            txResult = await marketplace?.directListings.buyFromListing(
+                directListing[0].id,
+                1
+            );
+        } else {
+            throw new Error("No listing found");
+        }
+
+        return txResult;
+    }
      
   return (
     
@@ -73,7 +102,7 @@ const NftCheckOut = ({ route}) => {
         fontWeight:600,
         color:'#131330'
         }}>
-      Check out
+      Check out2
     </Text>
 </View>
 <View style={{
@@ -190,22 +219,23 @@ borderWidth: 3,
 padding:3,
 borderColor: "#7f81f3",
  }}>
+
  <Web3Button
-      contractAddress={Address}
-      action={() =>
-        buyNow({
-          id: id, // ID of the listing to buy
-          type: Direct (0), // Direct (0) or Auction (1)
-          buyAmount: "1", // Amount to buy
-         //{{wallet_address}}", // Wallet to buy for, defaults to current wallet
-        })
-        
-      }onError={(error) => {
-        console.error(error)
-        alert(error)}}
-    >
-      Buy Now
-    </Web3Button>
+  contractAddress={MARKETPLACE_ADDRESS}
+  action={async () => await buyListing()}
+onSuccess={()=>{
+    navigation.navigate("Success")
+    console.warn("assss",directListing)
+}}
+onError={(error)=>{
+    navigation.navigate("Error")
+    console.warn("assss",directListing)
+    alert(error)
+}}
+>
+  Buy Now
+</Web3Button>
+
  </View>
 
 </LinearGradient>

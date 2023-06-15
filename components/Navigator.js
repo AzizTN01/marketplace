@@ -19,6 +19,7 @@ import { View ,
 
 
 import Feather from "react-native-vector-icons/Feather"
+import SuccessPage from './SuccessPage';
 const Stack = createStackNavigator();
 const Tab =  createBottomTabNavigator();
 
@@ -56,6 +57,7 @@ const Homestack = ({}) => {
     <Stack.Screen headerShown={false} name="NftCheckOut" component={NftCheckOut} />
     <Stack.Screen headerShown={false} name="CheckOutEnglish" component={CheckOutEnglish} />
     <Stack.Screen headerShown={false} name="Error" component={Error} />
+    <Stack.Screen headerShown={false} name="Success" component={SuccessPage} />
   </Stack.Navigator>
   );
   }

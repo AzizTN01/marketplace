@@ -23,26 +23,26 @@ const Address ='0x8D3bc1C6B16c885Aa8F5241340De968F2F54A67f';
 const BuynftEnglish = ({ route}) => {
 
     function shortenString(inputString) {
-   
+
           return inputString?.substring(0, 3) + "..." + inputString?.substring(inputString?.length - 3);
         
       };
-    const id = route.params.id
+    const {item} = route.params
     const { contract } = useContract(Address);
     const { mutateAsync: buyNow} = useBuyNow(contract);
     const currentaddress = useAddress();
-    const { data:nfts ,isLoading:loading } = useEnglishAuction(contract,id);
+    // const { data:item ,isLoading:loading } = useEnglishAuction(contract,id);
 
     
 
-    const price =  nfts?.buyoutCurrencyValue.displayValue+ ' ' + nfts?.buyoutCurrencyValue.symbol;
-    const name = nfts?.asset.name
-    const user = shortenString(nfts?.creatorAddress) ;
-    const description =nfts?.asset.description;
-    const prop = nfts?.asset.properties;
-    const listingId = nfts?.id
+    const price =  item?.buyoutCurrencyValue.displayValue+ ' ' + item?.buyoutCurrencyValue.symbol;
+    const name = item?.asset.name
+    const user = shortenString(item?.creatorAddress) ;
+    const description =item?.asset.description;
+    const prop = item?.asset.properties;
+    const listingId = item?.id
     const navigation = useNavigation();
-    const owner =nfts?.creatorAddress
+    const owner =item?.creatorAddress
     const access = owner == user ? !access : access;
  const { user:users , isLoggedIn, isLoading } = useUser();
     
@@ -66,7 +66,7 @@ const BuynftEnglish = ({ route}) => {
   
  
  <Image
-         source={{uri:nfts?.asset.image}}
+         source={{uri:item?.asset.image}}
          style={{
         //    alignSelf:'center',
             borderBottomLeftRadius:20,
@@ -117,7 +117,7 @@ const BuynftEnglish = ({ route}) => {
                         marginLeft: '10%',
                       //  backgroundColor:'red'
                     }}>
-                       {loading &&
+                       {/* {loading &&
                           <ContentLoader 
                           speed={2}
                           width={100}
@@ -137,7 +137,7 @@ const BuynftEnglish = ({ route}) => {
                           <Rect x="166" y="23" rx="3" ry="3" width="173" height="11" />
                         </ContentLoader>
                       
-                      }
+                      } */}
                        {price}
                     </Text>
 
@@ -167,7 +167,7 @@ const BuynftEnglish = ({ route}) => {
                     fontWeight:600,
                     color:'#393A90'
                 }}>
-                    {loading &&
+                    {/* {loading &&
                     <ContentLoader 
                     speed={2}
                     width={100}
@@ -187,7 +187,7 @@ const BuynftEnglish = ({ route}) => {
                     <Rect x="166" y="23" rx="3" ry="3" width="173" height="11" />
                   </ContentLoader>
                 
-                }
+                } */}
                     {name}
                 </Text>
                 <Text style={{
@@ -195,7 +195,7 @@ const BuynftEnglish = ({ route}) => {
                     fontWeight:400,
                     color:'#A1A4B3'
                 }}>
-                     {loading &&
+                     {/* {loading &&
                     <ContentLoader 
                     speed={2}
                     width={100}
@@ -215,9 +215,9 @@ const BuynftEnglish = ({ route}) => {
                     <Rect x="166" y="23" rx="3" ry="3" width="173" height="11" />
                   </ContentLoader>
                 
-                }
+                } */}
                    
-                    {!loading && 'by '+ user}
+                     {'by '+ user}
                 </Text>
                 </View>
                 <View>
@@ -230,7 +230,7 @@ const BuynftEnglish = ({ route}) => {
                 }}>
                     Description
                 </Text>
-                {loading &&
+                {/* {loading &&
                     <ContentLoader 
                     speed={2}
                     width={100}
@@ -250,8 +250,8 @@ const BuynftEnglish = ({ route}) => {
                     <Rect x="166" y="23" rx="3" ry="3" width="173" height="11" />
                   </ContentLoader>
                 
-                }
-               {!loading  && 
+                } */}
+               {/* {!loading  &&  */}
                 <Text style={{
                     fontSize:14,
                     fontWeight:400,
@@ -261,7 +261,7 @@ const BuynftEnglish = ({ route}) => {
                     description
                     }
                 </Text>
-                }
+                {/* } */}
                  </View>
             
 
@@ -285,16 +285,16 @@ const BuynftEnglish = ({ route}) => {
               borderRadius:10,
              
             }}>
-                <Button  
+                {/* <Button  
                 title='Chech Out' 
                  onPress={() =>
-                    navigation.navigate('CheckOut',{id:listingId})
+                    navigation.navigate('CheckOutEnglish',{id:listingId})
                   // navigation.navigate('CheckOut',{id:listingId})
                 
                 }
                 color={'#7f81f3'}
                
-        />
+        /> */}
                   </View>
                   <View  style={{
               alignSelf:'stretch',
@@ -306,7 +306,7 @@ const BuynftEnglish = ({ route}) => {
                 <Button  
                 title='Place a bid' 
                  onPress={() =>
-                    navigation.navigate('CheckOutEnglish',{id:listingId})
+                    navigation.navigate('CheckOutEnglish',{item,id: item.id})
                 
                 }
                 color={'#7f81f3'}

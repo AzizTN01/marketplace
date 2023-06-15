@@ -13,7 +13,8 @@ import { useNavigation } from '@react-navigation/native';
 const Address ='0x8D3bc1C6B16c885Aa8F5241340De968F2F54A67f';
 
 
-const FeaturedNft = ({title,artist,highestBid,currency,nft,owner,stat,item}) => {
+const FeaturedNft = ({title,artist,highestBid,currency,nft,owner,stat,item,navroute}) => {
+    // console.warn(item)
     const { contract } = useContract(Address);
     const { mutateAsync: buyNow} = useBuyNow(contract);
    const { data:nfts } = useDirectListings(contract);
@@ -35,7 +36,7 @@ const FeaturedNft = ({title,artist,highestBid,currency,nft,owner,stat,item}) => 
 
 }}>
                                    <TouchableOpacity onPress={() =>
-                                  navigation.navigate('Buynft',{
+                                  navigation.navigate(navroute,{
                                     item: item
                                   })
                                   }

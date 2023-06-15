@@ -97,7 +97,7 @@ const Error = ({}) => {
                     marginTop:'20%'
                 }}>
                     <TouchableOpacity
-                 //  onPress={ navigation.navigate('Home')}
+                  onPress={()=>{ navigation.navigate('Home')}}
                      >
                     <LinearGradient 
               colors={['#4C4EC0','#9fa0f6']} 

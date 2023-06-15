@@ -397,10 +397,11 @@ marginBottom:'15%'
           style={{
             width:'100%',
             height:'100%',
+            paddingVertical:'10%'
             //backgroundColor:'red',
           }}
           >     
-            <Image
+            {/* <Image
                 source={{uri: item?.metadata.image}}
                   style={{   
                 borderBottomLeftRadius:15,
@@ -409,22 +410,38 @@ marginBottom:'15%'
                 alignSelf:'center',
                 height:'40%',
                 width:'100%',
-              }} />
-              <View style={{ marginHorizontal:'5%'}}>
+              }} /> */}
+              <View style={{ marginHorizontal:'5%', }}>
+                <View style={{flexDirection:'row', paddingVertical:"3%"}}>
               <Text style={{
-              fontSize:14,
+              fontSize:16,
               fontWeight:600,
               color:'black',
-            }}>
-            name: {item?.metadata.name}
+            }}> name:
               </Text>
               <Text style={{
               fontSize:14,
+              fontWeight:400,
+              color:'black',
+            }}>  {item?.metadata.name}
+            </Text>
+            </View>
+            <View style={{ flexDirection:'column'}}>
+              <Text style={{
+              fontSize:16,
               fontWeight:600,
               color:'black',
             }}>
-            description: {item?.metadata.description} 
+            description: 
               </Text>
+              <Text style={{
+              fontSize:14,
+              fontWeight:400,
+              color:'black',
+            }}>
+            {item?.metadata.description} 
+              </Text>
+              </View>
               <LinearGradient 
          colors={[
           "#A49BFE80",
@@ -477,6 +494,7 @@ marginBottom:'15%'
                 
                 </View>
                 </LinearGradient>
+                
                 <LinearGradient 
          colors={[
           "#A49BFE80",
@@ -541,6 +559,14 @@ marginBottom:'15%'
                   quantity:quantity,
                 })
               }
+              onError={(error) => {
+                Navigation.navigate('Error')
+                alert(error)
+               }}
+               onSuccess={(error) => {
+                Navigation.navigate('SuccessPage')
+                alert(error)
+               }}
               style={{
               marginTop:'5%'
               }}
@@ -556,7 +582,7 @@ marginBottom:'15%'
             //alignSelf:'flex-end',
             height:'4%',
             width:'100%',
-            backgroundColor:'red',
+            backgroundColor:'#fff',
             alignContent:'center',
             alignItems:'center',
             marginVertical:'5%'

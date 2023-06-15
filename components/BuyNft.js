@@ -42,9 +42,9 @@ const Buynft = ({ route}) => {
     const { mutateAsync: buyNow} = useBuyNow(contract);
     const currentaddress = useAddress();
     // const { data:nfts,isLoading:loading ,error:error } = useDirectListing(contract,id);
-    const price =  item.currencyValuePerToken.displayValue + ' ' + item.currencyValuePerToken.symbol;
-    const name = 'By '+item.asset.name
-    const user = shortenString(item.creatorAddress) ;
+    const price =  "item.currencyValuePerToken.displayValue + ' ' + item.currencyValuePerToken.symbol";
+    //const name = 'By '+item.asset.name
+    // const user = shortenString(item.creatorAddress) ;
     const description =item.asset.description;
     const prop = item.asset.properties;
     const listingId = item.id;
@@ -276,7 +276,7 @@ const Buynft = ({ route}) => {
             
             
         }}>
-        {item.creatorAddress != currentaddress &&
+        {item && item?.creatorAddress != currentaddress &&
  <View  style={{
     alignSelf:'stretch',
     width:110,
@@ -287,7 +287,7 @@ const Buynft = ({ route}) => {
       <Button  
       title='Chech Out' 
        onPress={() =>
-          navigation.navigate('NftCheckOut',{id:listingId})
+          navigation.navigate('NftCheckOut',{item:item,id:item.id})
       
       }
       color={'#7f81f3'}

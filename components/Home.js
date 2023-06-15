@@ -267,7 +267,14 @@ foregroundColor="#d6d6d6"
                             return(
                             
                               <View>
+                                  {/* <TouchableOpacity onPress={() =>
+                                  navigation.navigate('Buynft',{
+                                    item: item
+                                  })
+                                  }
+                                  > */}
                                  <FeaturedNft
+                                 navroute={"Buynft"}
                                  item={item}
                                  id={nft?.id}
                                  title={item?.asset.name} 
@@ -277,7 +284,9 @@ foregroundColor="#d6d6d6"
                                  nft={item?.asset.image}
                                  owner={item?.creatorAddress}
                                  stat={item?.quantity} />
+                                 {/* </TouchableOpacity> */}
                                 </View> 
+                                
                             )
                        }}
                         //  )})
@@ -379,18 +388,22 @@ foregroundColor="#d6d6d6"
                      showsHorizontalScrollIndicator={false}
                        renderItem={({item})=>(
                                <View>
-                                <TouchableOpacity onPress={() =>
-                                   navigation.navigate('Buynftenglish',{id:englishAuctions?.id})
-                                   }>
+
+                                {/* <TouchableOpacity onPress={() =>
+                                   navigation.navigate('Buynftenglish',{item: item})
+                                   }> */}
                                   <FeaturedNft
+                                   navroute={"Buynftenglish"}
                                   title={item?.asset.name} 
                                   artist={item?.asset.name} 
                                   highestBid={item?.buyoutCurrencyValue.displayValue} 
                                   currency={item?.buyoutCurrencyValue.symbol}
                                   nft={item?.asset.image}
                                   listingId={item?.id}
-                                  stat={item.quantity} />
-                                  </TouchableOpacity>
+                                  stat={item.quantity}
+                                  item={item}
+                                  />
+                                  {/* </TouchableOpacity> */}
                               </View> 
                        )}
                        

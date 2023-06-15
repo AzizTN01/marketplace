@@ -20,7 +20,7 @@ const Address ='0x8D3bc1C6B16c885Aa8F5241340De968F2F54A67f';
 // const details = () => {
 //     return(
 //         <View>
-//             <Text>}}——
+//             <Text>
 //                 helo
 //             </Text>
 //         </View>
@@ -36,17 +36,17 @@ const CheckOut = ({ route}) => {
           return inputString?.substring(0, 3) + "..." + inputString?.substring(inputString?.length - 3);
         
       };
-      const id = route.params.id
+      const {item} = route.params
     const { contract } = useContract(Address,"marketplace");
     const { mutateAsync: buyNow} = useBuyNow(contract);
     const currentAddress = useAddress();
     const { data:nfts,error } = useEnglishAuction(contract,id);
-    const price =  nfts?.buyoutCurrencyValue.displayValue+ ' ' + nfts?.buyoutCurrencyValue.symbol;
-    const name = nfts?.asset.name
-    const user = shortenString(nfts?.creatorAddress) ;
-    const description =nfts?.asset.description;
-    const prop = nfts?.asset.properties;
-    const listingId = nfts?.id
+    const price =  item?.buyoutCurrencyValue.displayValue+ ' ' + item?.buyoutCurrencyValue.symbol;
+    const name = item?.asset.name
+    const user = shortenString(item?.creatorAddress) ;
+    const description =item?.asset.description;
+    const prop = item?.asset.properties;
+    const listingId = item?.id
     const  Navigation= useNavigation();
      
   return (
@@ -72,7 +72,9 @@ const CheckOut = ({ route}) => {
     <Text style={{
         fontSize:24,
         fontWeight:600,
-        color:'#131330'
+        color:'#131330',
+
+        backgroundColor:"red",
         }}>
       Check out
     </Text>
