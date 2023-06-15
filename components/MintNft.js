@@ -1,34 +1,43 @@
-import { useContract, useSDK } from "@thirdweb-dev/react-native";
-import React, { useEffect, useState } from "react";
+import { useAddress, useContract, useSDK } from "@thirdweb-dev/react-native";
+import React, { useState } from "react";
 import {
   SafeAreaView,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
+  Modal,
+  Dimensions,
+  Image,
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
+
 // import { ListingType } from "@thirdweb-dev/sdk";
-import Replicate from "replicate";
-import axios from "axios";
 import Feather from "react-native-vector-icons/Feather";
+import Replicate from "replicate";
 
 const Address = "0x245d1343EC0dE0dBE5730dD38D2fB6dfdecbfdaF";
 const replicate = new Replicate({
   auth: "272cf1e7ead952ace8664f77eb638a77175b3b84",
 });
 const Mintnft = ({ route }) => {
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const [nftName, setNFTName] = useState("");
+  const [nftDesc, setNftDesc] = useState("");
+  const [nftSymbol, setNftSymbol] = useState("");
+  const [aiText, setAiText] = useState("");
   const { contract } = useContract(Address);
+  const [img, setImg] = useState(null);
+  const userAdr = useAddress();
   const sdk = useSDK();
   const mintNft = async () => {
     collectionAddress = await sdk.deployer.deployNFTCollection({
-      name: "Fruit Basket",
-      symbol: "FRUIT",
-      primary_sale_recipient: "0x2ED0fE9a8FbB3b7f0ffC45a18eff8f0c3A0ABE2C",
-      image:
-        "https://bafkreie4zdcentifeqoukitd32lvd3k3kr3y5va7kqfdewd7budjkoanui.ipfs.nftstorage.link/",
-      description: "A fruit basket that lives on the Rinkeby blockchain! 🍎🧺",
+      name: nftName,
+      symbol: nftSymbol,
+      primary_sale_recipient: userAdr,
+      image: img,
+      description: nftDesc,
       /* Optional fields below */
       //platform_fee_recipient: "0x00000",
       //platform_fee_basis_points: "5",
@@ -39,13 +48,9 @@ const Mintnft = ({ route }) => {
     });
     const nftCollection = await sdk.getNFTCollection(collectionAddress);
     mintTxnHash = await nftCollection.mintToSelf?.({
-      name: "Orange",
-      description: "An orange living on the Rinkeby blockchain",
-      image:
-        "https://bafkreidxzweunukaruhyfvepkjrep76vi75y6yl5fq3pqedallz6nwoori.ipfs.nftstorage.link/",
-      properties: {
-        "Orange Type": "Navel", // Optional field to set attributes
-      },
+      name: nftName,
+      description: nftDesc,
+      image: img,
     });
     console.log(
       "Minted NFT Transaction Hash: ",
@@ -57,20 +62,139 @@ const Mintnft = ({ route }) => {
       "stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf",
       {
         input: {
-          prompt: "a vision of paradise. unreal engine"
-        }
+          prompt: aiText,
+        },
       }
     );
-    console.log("IMG", output)
-  }
+    console.log("TEXT", aiText);
+    console.log("IMG", output);
+    setImg(output[0]);
+  };
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: "red",
+        // backgroundColor: "red",
         marginBottom: "15%",
+        justifyContent: "flex-start",
+        gap: 0,
       }}
     >
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>
+              Write a description for image to be generated
+            </Text>
+            <LinearGradient
+              colors={["#A49BFE80", "#5F61F080"]}
+              style={{
+                flexDirection: "row",
+                // backgroundColor: 'yellow',
+                borderColor: "transparent",
+                borderWidth: 1,
+                borderRadius: 10,
+                marginTop: 10,
+                // marginBottom:5,
+              }}
+            >
+              <View
+                style={{
+                  // backgroundColor:'red',
+                  // padding:1,
+                  borderColor: "transparent",
+                  borderWidth: 1,
+                  borderRadius: 10,
+                  width: "100%",
+                  flexDirection: "row",
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: "white",
+                    flexDirection: "row",
+                    width: "100%",
+                    borderRadius: 10,
+                    paddingLeft: 10,
+                  }}
+                >
+                  <TextInput
+                    placeholder="Text Here"
+                    placeholderTextColor={"rgba(153, 153, 167, 0.5)"}
+                    value={aiText}
+                    onChangeText={(text) => {
+                      setAiText(text);
+                    }}
+                    style={{
+                      width: "100%",
+                      paddingVertical: 8,
+                      color: "black",
+                    }}
+                  />
+                </View>
+              </View>
+            </LinearGradient>
+            <View
+              style={{
+                width: "100%",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: 10,
+                flexDirection: "row",
+                paddingTop: 20,
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  width: "50%",
+                  padding: 10,
+                  backgroundColor: "#9798f4",
+                  borderRadius: 10,
+                  elevation: 3,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                onPress={() => {
+                  setModalVisible(false);
+                }}
+              >
+                <Text style={{ color: "#FFFF" }}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  width: "50%",
+                  padding: 10,
+                  backgroundColor: "#9798f4",
+                  borderRadius: 10,
+                  elevation: 3,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                onPress={() => {
+                  generateImg();
+                  setModalVisible(false);
+                }}
+              >
+                <Text style={{ color: "#FFFF" }}>Generate</Text>
+              </TouchableOpacity>
+            </View>
+            {img && (
+              <Image
+                source={{ uri: img }}
+                style={{ width: 250, height: 150, resizeMode: "contain" }}
+              />
+            )}
+          </View>
+        </View>
+      </Modal>
       <LinearGradient
         colors={["#D7D3FF", "white", "white", "#D7D3FF"]}
         start={{ x: 0, y: 1 }}
@@ -80,7 +204,7 @@ const Mintnft = ({ route }) => {
       >
         <View
           style={{
-            //backgroundColor: 'green',
+            //backgroundColor: "green",
             flex: 1,
             flexDirection: "column",
             // justifyContent:'center',
@@ -91,8 +215,8 @@ const Mintnft = ({ route }) => {
             style={{
               width: "90%",
               height: "10%",
-              //  backgroundColor:'red',
-              margin: "5%",
+              //backgroundColor:'red',
+
               // flexDirection:'column',
               justifyContent: "center",
             }}
@@ -111,8 +235,8 @@ const Mintnft = ({ route }) => {
           <View
             style={{
               width: "90%",
-              height: "75%",
-              // backgroundColor:'red',
+              height: "85%",
+              //backgroundColor: "red",
               margin: "5%",
               flexDirection: "column",
               // justifyContent:'center'
@@ -167,7 +291,68 @@ const Mintnft = ({ route }) => {
                       paddingVertical: 8,
                       color: "black",
                     }}
-                  ></TextInput>
+                    value={nftName}
+                    onChangeText={(text) => {
+                      setNFTName(text);
+                    }}
+                  />
+                </View>
+              </View>
+            </LinearGradient>
+            <LinearGradient
+              colors={["#A49BFE80", "#5F61F080"]}
+              style={{
+                flexDirection: "row",
+                // backgroundColor: 'yellow',
+                borderColor: "transparent",
+                borderWidth: 1,
+                borderRadius: 10,
+                marginTop: 10,
+                // marginBottom:5,
+              }}
+            >
+              <View
+                style={{
+                  // backgroundColor:'red',
+                  // padding:1,
+                  borderColor: "transparent",
+                  borderWidth: 1,
+                  borderRadius: 10,
+                  width: "100%",
+                  flexDirection: "row",
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: "white",
+                    flexDirection: "row",
+                    width: "100%",
+                    borderRadius: 10,
+                  }}
+                >
+                  <Feather
+                    style={{
+                      marginLeft: 15,
+                      marginRight: 4,
+                      alignSelf: "center",
+                    }}
+                    name="smile"
+                    size={20}
+                    color={"rgba(153, 153, 167, 0.5)"}
+                  />
+                  <TextInput
+                    placeholder="Symbol of you're NFT "
+                    placeholderTextColor={"rgba(153, 153, 167, 0.5)"}
+                    style={{
+                      width: "100%",
+                      paddingVertical: 8,
+                      color: "black",
+                    }}
+                    value={nftSymbol}
+                    onChangeText={(text) => {
+                      setNftSymbol(text);
+                    }}
+                  />
                 </View>
               </View>
             </LinearGradient>
@@ -220,7 +405,11 @@ const Mintnft = ({ route }) => {
                       paddingVertical: 8,
                       color: "black",
                     }}
-                  ></TextInput>
+                    value={nftDesc}
+                    onChangeText={(text) => {
+                      setNftDesc(text);
+                    }}
+                  />
                 </View>
               </View>
             </LinearGradient>
@@ -240,7 +429,8 @@ const Mintnft = ({ route }) => {
                   backgroundColor: "#9798f4",
                   borderRadius: 10,
                   elevation: 3,
-                  justifyContent: "center", alignItems: "center"
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
                 <Text style={{ color: "#FFFF" }}>Upload Image</Text>
@@ -251,12 +441,51 @@ const Mintnft = ({ route }) => {
                   height: 50,
                   backgroundColor: "#9798f4",
                   borderRadius: 10,
-                  elevation: 3, justifyContent: "center", alignItems: "center"
+                  elevation: 3,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                onPress={() => {
+                  setModalVisible(true);
                 }}
               >
-                <Text style={{ color: "#FFFF" }}>Generate Image</Text>
+                <Text
+                  style={{ color: "#FFFF" }}
+                  onPress={() => {
+                    setModalVisible(true);
+                  }}
+                >
+                  Generate Image
+                </Text>
               </TouchableOpacity>
             </View>
+            {img && (
+              <Image
+                source={{ uri: img }}
+                style={{
+                  width: "100%",
+                  height: 120,
+                  resizeMode: "contain",
+                  marginTop: 5,
+                  marginBottom:5
+                }}
+              />
+            )}
+            <TouchableOpacity style={{
+              width: "100%",
+             padding:10,
+              backgroundColor: "#9798f4",
+              borderRadius: 10,
+              elevation: 3,
+              justifyContent: "center",
+              alignItems: "center", alignSelf: "center", marginTop: 5
+            }}
+              onPress={() => {
+                mintNft();
+              }}
+            >
+              <Text style={{ color: "#FFFF" }}>Mint Now</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </LinearGradient>
@@ -265,3 +494,48 @@ const Mintnft = ({ route }) => {
 };
 
 export default Mintnft;
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    width: Dimensions.get("screen").width * 0.8,
+    height: 215,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+  },
+});
